@@ -1,0 +1,57 @@
+---
+title: "Steady-state analysis of flow cytometry data"
+author: "R Clay Wright"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Steady-state analysis of flow cytometry data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = T)
+library(flowTime)
+```
+This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining the florescent reporter levels of a synthetic biological circuit in liquid cultures of budding yeast. Here, we analyze a circuit in which a florescent reporter is fused to a protein that is degraded over time after addition of an inducer molecule. At some time post-induction (as optimized by the experimenter) flourescence of these cultures is analyzed by flow cytometry. Here we demostrate how to import the resulting .fcs files into R, annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), and compile the relevant events and measurements.
+
+#Importing and annotating data
+Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
+```{r}
+plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"),alter.names=T)
+#add plate numbers to the sampleNames
+sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
+dat<-plate1
+```
+If you have several plates this code can be repeated and each plate can be combined to assemble the full dataset.
+```{r eval = F}
+plate2<-read.flowSet(path=paste(experiment,"_2/",sep=""),alter.names=T)
+sampleNames(plate2)<-paste("2_",sampleNames(plate2),sep="")
+dat<-rbind2(plate1,plate2)
+```
+Now we import the table of metadata.
+```{r}
+annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+```
+The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. We can also create this column from our dataset and attach the annotation columns. Alternatively one can use the `createAnnotation` function to create a dataframe with the appropriate `name` column that can then be filled in via R-code or saved as a csv file and filled via a spreadsheet editor. 
+```{r eval = F}
+sampleNames(dat) 
+sampleNames(dat) == annotation$name 
+annotation <- cbind(annotation, 'names' =  sampleNames(dat)) 
+annotation <- createAnnotation(dat)
+write.csv(annotation)
+```
+Finally we can attach this metadata to the flowSet using the `annotateFlowSet` function. 
+```{r}
+adat <- annotateFlowSet(dat, annotation)
+head(rownames(pData(adat)))
+head(pData(adat))
+```
+
+#Compiling and plotting data
+Now we are ready to analyze the raw data in this `flowSet`. For this steady-state or single time point experiment we will use the `steadyState` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of the relevant data and metadata for each event. This `dataframe` can then be used to visualize the full dataset. 
+```{r}
+dat.SS <- steadyState(adat, ploidy = 'diploid', only = 'singlets')
+
+p <- ggplot(dat.SS, aes(as.factor(treatment), FL2.A)) + geom_boxplot(outlier.size = 0) + facet_grid(IAA~AFB) + theme_classic() + ylim(c(-1000,10000))
+p
+```
