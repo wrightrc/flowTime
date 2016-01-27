@@ -8,7 +8,7 @@ Description: In the past we have always generated summary statistics for each fl
   annotation and analysis of steady-state or time-lapse data utilizing all of the data collected from the thousands of
   individual cells in each sample. This package was developed based for analysis of yeast expressing fluorescent proteins on a BD
   Accuri SORP cytometer, but may be adapted for analysis of other data.
-Depends: R (>= 3.3.0)
+Depends: R (>= 3.2.0)
 License: Artistic-2.0
 LazyData: true
 Imports: plyr, flowCore, flowViz, ggplot2, BiocGenerics
