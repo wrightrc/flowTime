@@ -11,7 +11,11 @@ Description: In the past we have always generated summary statistics for each fl
 Depends: R (>= 3.2.0)
 License: Artistic-2.0
 LazyData: true
-Imports: plyr, flowCore, flowViz, ggplot2, BiocGenerics
+Imports: plyr,
+    flowCore,
+    flowViz,
+    ggplot2,
+    BiocGenerics
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

@@ -41,11 +41,6 @@ write.flowSet(adat, outdir = 'inst/extdata/tc_example')
 annotation <- subset(annotation, annotation$strain == 3)
 write.csv(annotation, 'inst/extdata/tc_example.csv')
 
-#Nemhauser Lab Cytometer
-##FL3.A=yellow
-##FL4.A=blue
-##ploidy=haploid or diploid
-##only=yeast(ungated) or singlets(gated for single cells) or doublets(gated for larger cells?)
 dat_sum<-Nemsummary.cyt(dat, ploidy="haploid", only="singlets", channel="FL3.A")
 dat_sum_blue<-Nemsummary.cyt(dat, ploidy="diploid", only="singlets", channel="FL4.A")
 
