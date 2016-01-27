@@ -12,12 +12,12 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = T)
 library(flowTime)
 ```
-This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining the florescent reporter levels of a synthetic biological circuit in liquid cultures of budding yeast. Here, we analyze a circuit in which a florescent reporter is fused to a protein that is degraded over time after addition of an inducer molecule. At some time post-induction (as optimized by the experimenter) flourescence of these cultures is analyzed by flow cytometry. Here we demostrate how to import the resulting .fcs files into R, annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), and compile the relevant events and measurements.
+This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining time-lapse florescence reporter levels from a synthetic biological circuit in liquid cultures of budding yeast. Here, we analyze a circuit in which florescent reporter expression is mediated by a transcription factor/transcriptional repressor complex. The transcriptional repressor is de degraded via the ubitquitin proteasome system, in response to a small molecule. Here we demostrate how to import the resulting .fcs files into R, gate and annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), generate summary statistics for each sample and timepoint and plot this data (in this case, activation curves).
 
 #Importing and annotating data
 Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
 ```{r}
-plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"),alter.names=T)
+plate1<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"),alter.names=T)
 #add plate numbers to the sampleNames
 sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
 dat<-plate1
