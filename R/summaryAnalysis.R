@@ -165,6 +165,37 @@ flsummary <- function(flowset,channel="FL3.A",moments=F,split=F,transform=F) {
   return(flsummary)
 }
 
+#' rename flsummary data
+#' keeping it separate for ease of use
+#' probably slow due to for loop
+#'
+#' @param x
+#' @param channel
+#' @param transform
+#'
+#' @return
+#' @export
+#'
+#' @examples
+renameflcols <- function(x,channel="FL1.A",transform=F) {
+  cols <- c("mean","median","sd")
+  if (transform!=F) {
+    if (transform=="fscanorm") {
+      tname <- "FL1_FSC"
+    } else if (transform=="log") {
+      tname <- "log"
+    } else {
+      stop("invalid transform")
+    }
+  } else {
+    return(x)
+  }
+  for (i in cols) {
+    colnames(x)[grep(i,paste(channel,colnames(x),sep=""))] <- paste(tname,i,sep="")
+  }
+  return(x)
+}
+
 #' summary.cyt:
 #' Gates a sample to all yeast, then singlet, then doublets
 #' Does the work of singletsummary.cyt,doubletsummary.cyt,yeastsummary.cyt

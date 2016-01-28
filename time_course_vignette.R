@@ -41,7 +41,7 @@ write.flowSet(adat, outdir = 'inst/extdata/tc_example')
 annotation <- subset(annotation, annotation$strain == 3)
 write.csv(annotation, 'inst/extdata/tc_example.csv')
 
-dat_sum<-Nemsummary.cyt(dat, ploidy="haploid", only="singlets", channel="FL3.A")
+dat_sum<-summary.cyt(adat, ploidy="diploid", only="singlets", channel="FL1.A")
 dat_sum_blue<-Nemsummary.cyt(dat, ploidy="diploid", only="singlets", channel="FL4.A")
 
 ################
