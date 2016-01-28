@@ -12,17 +12,17 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = T)
 library(flowTime)
 ```
-This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining time-lapse florescence reporter levels from a synthetic biological circuit in liquid cultures of budding yeast. Here, we analyze a circuit in which florescent reporter expression is mediated by a transcription factor/transcriptional repressor complex. The transcriptional repressor is de degraded via the ubitquitin proteasome system, in response to a small molecule. Here we demostrate how to import the resulting .fcs files into R, gate and annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), generate summary statistics for each sample and timepoint and plot this data (in this case, activation curves).
+This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining time-lapse florescence reporter levels from a synthetic biological circuit in liquid cultures of budding yeast. In this example circuit, fluorescent reporter expression is mediated by a transcription factor/transcriptional repressor complex. The transcriptional repressor is degraded via the ubitquitin proteasome system, in response to a small molecule. Fluorescence levels are measured approximately every 10 minutes by flow cytometry. Here we demostrate how to import the resulting .fcs files into R, gate and annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), generate summary statistics for each sample and timepoint and finally plot this data (in this case, activation curves).
 
 #Importing and annotating data
 Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
 ```{r}
 plate1<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"),alter.names=T)
-#add plate numbers to the sampleNames
-sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
+#add plate numbers to the sampleNames, in this example we have already done this step
+#sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
 dat<-plate1
 ```
-If you have several plates this code can be repeated and each plate can be combined to assemble the full dataset.
+If you have several plates this code can be repeated and each plate can be combined (using `rbind2`) to assemble the full dataset.
 ```{r eval = F}
 plate2<-read.flowSet(path=paste(experiment,"_2/",sep=""),alter.names=T)
 sampleNames(plate2)<-paste("2_",sampleNames(plate2),sep="")
@@ -30,7 +30,7 @@ dat<-rbind2(plate1,plate2)
 ```
 Now we import the table of metadata.
 ```{r}
-annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 ```
 The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. We can also create this column from our dataset and attach the annotation columns.
 ```{r eval = F}
@@ -46,9 +46,9 @@ head(pData(adat))
 ```
 
 #Compiling and plotting data
-Now we are ready to analyze the raw data in this `flowSet`. For this steady-state or single time point experiment we will use the `steadyState` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of the relevant data and metadata for each event. This `dataframe` can then be used to visualize the full dataset. 
+Now we are ready to analyze the raw data in this `flowSet`. For this time-course experiment we will use the `summary.cyt` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of summary statistics for the specified channel each `flowFrame`. This `dataframe` can then be used to visualize the full dataset. 
 ```{r}
-dat.SS <- steadyState(adat, ploidy = 'diploid', only = 'singlets')
+dat.sum <- summary.cyt(adat, ploidy = 'diploid', only = 'singlets')
 
 p <- ggplot(dat.SS, aes(as.factor(treatment), FL2.A)) + geom_boxplot(outlier.size = 0) + facet_grid(IAA~AFB) + theme_classic() + ylim(c(-1000,10000))
 p
