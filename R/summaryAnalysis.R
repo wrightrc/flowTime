@@ -140,23 +140,20 @@ flsummary <- function(flowset,channel="FL3.A",moments=F,split=F,transform=F) {
     fl <- cbind(fl,fl_moments)
   }
 
-  file <- fsApply(flowset,function(x)strsplit(keyword(x)$GUID,".fcs")[[1]])
-  colnames(file) <- "file"
+  name <- fsApply(flowset,function(x) keyword(x)$GUID)
+  colnames(name) <- "name"
 
   if (length(warnings) != 0) {
     warnings <- paste(warnings,collapse=", ")
     print(paste("Warning: frame(s)",warnings,"had less than 100 events in this gate."))
   }
 
-  # Insert empty strain and colony columns
-  strain=matrix(nrow=n_experiment)
-  treatment=matrix(nrow=n_experiment)
-
   # Put it all together
-  flsummary <- cbind(time,btime,atime,events,conc,fl,file,strain,treatment)
+  flsummary <- cbind(time,btime,atime,events,conc,fl,name)
 
   # Make rows filename keys
-  rownames(flsummary) <- file
+  rownames(flsummary) <- name
+  flsummary <- join(flsummary,pData(flowset), by = 'name')
 
   # Rename the 'mean', 'median', and 'sd' columns to reflect transformations done or channel used.
   # 'FL1.A' = no transformation, 'FL1_FSC' = "fsacanorm", 'log' = "log"

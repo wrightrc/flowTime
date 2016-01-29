@@ -42,6 +42,8 @@ annotation <- subset(annotation, annotation$strain == 3)
 write.csv(annotation, 'inst/extdata/tc_example.csv')
 
 dat_sum<-summary.cyt(adat, ploidy="diploid", only="singlets", channel="FL1.A")
+colnames(dat_sum)[9]<-'X'
+join(dat_sum, annotation,'X')
 ##need to reset gates, but these are bound in our environment
 ls.str(envir = 'package:flowTime')
 exists('yeastGate')
@@ -50,6 +52,12 @@ where('yeastGate')
 unlockBinding('yeastGate', 'package:flowTime')
 rm('yeastGate')
 flowTime:::yeastGate
+##I think I will just move these to the extdata folder, that way they won't get loaded automatically.
+#I can create a default set that will be loaded prior to any summary function
+#I will also write a function to create new gateSets and then they can be set to default
+
+
+
 ################
 #YPH
 ################

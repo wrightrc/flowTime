@@ -192,7 +192,7 @@ steadyState <- function(flowset,ploidy="diploid", only="singlets"){
 #                                     #y values
 #                                     2e4,5e4,20e5,30e5,5e5,8.5e5),
 #                                     ncol=2,nrow=6,dimnames=list(rep(NA,6),c("FSC.A","FSC.H"))))
-#
+
 # save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = 'data/EPJGates.RData')
 
 # # Dynamic analysis --------------------------------------------------------
