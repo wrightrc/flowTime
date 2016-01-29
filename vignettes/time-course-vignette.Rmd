@@ -32,7 +32,7 @@ Now we import the table of metadata.
 ```{r}
 annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 ```
-The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. We can also create this column from our dataset and attach the annotation columns.
+The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. We can also create this column from our dataset and attach the annotation columns. The order of the unique identifier column does not matter, as `annotateFlowSet` will join `annotation` to `dat` by matching identifiers.
 ```{r eval = F}
 sampleNames(dat) #view the sample names
 sampleNames(dat) == annotation$id #replace 'id' with the unique identifier column to test if this column is identical to the sample names of your flowset
@@ -47,9 +47,10 @@ head(pData(adat))
 
 #Compiling and plotting data
 Now we are ready to analyze the raw data in this `flowSet`. For this time-course experiment we will use the `summary.cyt` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of summary statistics for the specified channel each `flowFrame`. This `dataframe` can then be used to visualize the full dataset. 
-```{r}
-dat.sum <- summary.cyt(adat, ploidy = 'diploid', only = 'singlets')
+```{r fig.width= 7}
+#load the gate set for BD Accuri C6 cytometer
+loadGates(gatesFile = 'C6Gates.RData')
+dat_sum <- summary.cyt(adat, ploidy = 'diploid', only = 'singlets',channel = 'FL1.A')
 
-p <- ggplot(dat.SS, aes(as.factor(treatment), FL2.A)) + geom_boxplot(outlier.size = 0) + facet_grid(IAA~AFB) + theme_classic() + ylim(c(-1000,10000))
-p
+qplot(x = time, y= FL1.Amean, data = dat_sum, color = factor(treatment)) + geom_line() + xlab('Time post Auxin addition (min)') + ylab('Reporter Fluorescence (AU)') + scale_color_discrete(name=expression(paste("Auxin (",mu,"M)",sep = ""))) + theme_classic(base_size = 14, base_family = 'Arial')
 ```
