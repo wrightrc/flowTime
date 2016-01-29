@@ -244,6 +244,7 @@ summary.cyt <- function(
 
 
   # Gate the samples
+  if (!exists('yeastGate')) loadGates()
   if (ploidy=="haploid") {
     print("Gating with haploid gates...")
     yeast <- Subset(flowset,yeastGate)

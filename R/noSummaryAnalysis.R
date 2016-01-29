@@ -73,10 +73,11 @@ give.n <- function(x){ ##used to add the N below each sample
 #' @param yourFlowSets
 #' @param ploidy = the gate to subset your flowsets based on the ploidy of you strains and your cytometer.
 #' @param only= 'yeast', 'singlets', or 'doublets'
+#' @param gated is the data already gated?
 #' @return
 #' @export
 #' @examples
-steadyState <- function(flowset,ploidy="diploid", only="singlets"){
+steadyState <- function(flowset, gated = F, ploidy="diploid", only="singlets"){
 
   ### Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)
@@ -85,57 +86,61 @@ steadyState <- function(flowset,ploidy="diploid", only="singlets"){
   #channel <- flowSet[,'FL2.A',drop=FALSE]
 
   ### Gate the samples
-  if (ploidy=="haploid") {
-    print("Gating with haploid gates...")
-    yeast <- Subset(flowset,yeastGate)
-    singlets <- Subset(yeast,hapsingletGate)
-    doublets <- Subset(yeast,hapdoubletGate)
-  } else if (ploidy=="diploid") {
-    print("Gating with diploid gates...")
-    yeast <- Subset(flowset,yeastGate)
-    singlets <- Subset(yeast,dipsingletGate)
-    doublets <- Subset(yeast,dipdoubletGate)
-  } else {
-    stop('Error: You must define ploidy="haploid" or ploidy="diploid"')
-  }
-  ### Convert flowSet to dataframe containing all events for each subset => for plotting
-  if (only==F) {
+  if (gated == F) {
+    if (!exists(c('yeastGate','hapsingletGate','hapdoubletGate','dipsingletGate','dipdoubletGate'))) loadGates()
+      if (ploidy=="haploid") {
+        print("Gating with haploid gates...")
+        yeast <- Subset(flowset,yeastGate)
+        singlets <- Subset(yeast,hapsingletGate)
+        doublets <- Subset(yeast,hapdoubletGate)
+      } else if (ploidy=="diploid") {
+        print("Gating with diploid gates...")
+        yeast <- Subset(flowset,yeastGate)
+        singlets <- Subset(yeast,dipsingletGate)
+        doublets <- Subset(yeast,dipdoubletGate)
+      } else {
+        stop('Error: You must define ploidy="haploid" or ploidy="diploid"')
+      }
+    }
+    ### Convert flowSet to dataframe containing all events for each subset => for plotting
+    if (only==F) {
 
-    print("Converting all yeast events...")
-    yeastdF <- ddply(pData(yeast), colnames(pData(yeast))[-1],
-                     function(tube){
-                       fsApply(x = yeast[tube$name],rbind,use.exprs = T)})
-    print("Converting doublets events...")
-    doubletsdF <- ddply(pData(doublets), colnames(pData(doublets))[-1],
-                        function(tube){
-                          fsApply(x = doublets[tube$name],rbind,use.exprs = T)})
+      print("Converting all yeast events...")
+      yeastdF <- ddply(pData(yeast), colnames(pData(yeast))[-1],
+                       function(tube){
+                         fsApply(x = yeast[tube$name],rbind,use.exprs = T)})
+      print("Converting doublets events...")
+      doubletsdF <- ddply(pData(doublets), colnames(pData(doublets))[-1],
+                          function(tube){
+                            fsApply(x = doublets[tube$name],rbind,use.exprs = T)})
 
-    print("Converting singlets events...")
-    singletsdF<- ddply(pData(doublets), colnames(pData(doublets))[-1],
+      print("Converting singlets events...")
+      singletsdF<- ddply(pData(doublets), colnames(pData(doublets))[-1],
+                         function(tube){
+                           fsApply(x = doublets[tube$name],rbind,use.exprs = T)})}
+    if (only=="singlets") {
+      print("Converting singlets events...")
+      singletsdF<- ddply(pData(singlets), colnames(pData(singlets))[-1],
+                         function(tube){
+                           fsApply(x = singlets[tube$name],rbind,use.exprs = T)})
+      return(singletsdF)
+    } else if (only=="doublets") {
+      print("Converting doublets events...")
+      doubletsdF <- ddply(pData(doublets),
+                          colnames(pData(doublets))[-1],
+                          function(tube){
+                            fsApply(x = doublets[tube$name],rbind,use.exprs = T)})
+      return(doubletsdF)
+    } else if (only=="yeast") {
+      print("Converting all yeast events...")
+      yeastdF <- ddply(pData(yeast),
+                       colnames(pData(yeast))[-1],
                        function(tube){
-                         fsApply(x = doublets[tube$name],rbind,use.exprs = T)})}
-  if (only=="singlets") {
-    print("Converting singlets events...")
-    singletsdF<- ddply(pData(singlets), colnames(pData(singlets))[-1],
-                       function(tube){
-                         fsApply(x = singlets[tube$name],rbind,use.exprs = T)})
-    return(singletsdF)
-  } else if (only=="doublets") {
-    print("Converting doublets events...")
-    doubletsdF <- ddply(pData(doublets),
-                        colnames(pData(doublets))[-1],
-                        function(tube){
-                          fsApply(x = doublets[tube$name],rbind,use.exprs = T)})
-    return(doubletsdF)
-  } else if (only=="yeast") {
-    print("Converting all yeast events...")
-    yeastdF <- ddply(pData(yeast),
-                     colnames(pData(yeast))[-1],
-                     function(tube){
-                       fsApply(x = yeast[tube$name],rbind,use.exprs = T)})
-    return(yeastdF)
+                         fsApply(x = yeast[tube$name],rbind,use.exprs = T)})
+      return(yeastdF)
+    }
   }
-}
+
 
 # #########################
 # ###  Cytometer Gates  ###
