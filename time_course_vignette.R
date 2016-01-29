@@ -62,6 +62,8 @@ flowTime:::yeastGate
 #save the Gates I currently have in memory
 saveGates(fileName = 'FCGates.RData')
 
+#ok now I think I've got the save gates and load gates functions done
+dat_sum<-summary.cyt(adat, ploidy="diploid", only="singlets", channel="FL1.A")
 
 
 ################
