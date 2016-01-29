@@ -83,5 +83,5 @@ setGates <- function(gatesFile){
 #'
 #' @examples
 loadGates <- function(gatesFile = 'defaultGates.RData'){
-  load(paste0(system.file("extdata/Gates/", package = "flowTime"),gatesFile))
+  load(paste0(system.file("extdata/Gates/", package = "flowTime"),gatesFile), envir = globalenv())
 }

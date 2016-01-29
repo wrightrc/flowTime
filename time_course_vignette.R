@@ -60,9 +60,10 @@ flowTime:::yeastGate
 #OK, so I have gone back and edited summary() to handle the smoother annotation functions I've written, and this works.
 #Now I need to work on gateCreator
 #save the Gates I currently have in memory
-saveGates(fileName = 'FCGates.RData')
+saveGates(fileName = 'defaultGates.RData')
 
 #ok now I think I've got the save gates and load gates functions done
+loadGates('C6Gates.RData')
 dat_sum<-summary.cyt(adat, ploidy="diploid", only="singlets", channel="FL1.A")
 
 

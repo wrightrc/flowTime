@@ -203,6 +203,7 @@ renameflcols <- function(x,channel="FL1.A",transform=F) {
 #' @param flowset
 #' @param transform
 #' @param channel
+#' @param gated is the data already appropriately gated?
 #' @param ploidy
 #' @param moments
 #' @param split
@@ -216,6 +217,7 @@ summary.cyt <- function(
   flowset,
   transform=F,
   channel="FL1.A",
+  gated = F,
   ploidy=F,
   moments=F,
   split=F,
@@ -244,21 +246,23 @@ summary.cyt <- function(
 
 
   # Gate the samples
-  if (!exists('yeastGate')) loadGates()
-  if (ploidy=="haploid") {
-    print("Gating with haploid gates...")
-    yeast <- Subset(flowset,yeastGate)
-    singlets <- Subset(yeast,hapsingletGate)
-    doublets <- Subset(yeast,hapdoubletGate)
-  } else if (ploidy=="diploid") {
-    print("Gating with diploid gates...")
-    yeast <- Subset(flowset,yeastGate)
-    singlets <- Subset(yeast,dipsingletGate)
-    doublets <- Subset(yeast,dipdoubletGate)
-  } else {
-    stop('Error: You must define ploidy="haploid" or ploidy="diploid"')
+  ### Gate the samples
+  if (gated == F) {
+    if (!exists(c('yeastGate','hapsingletGate','hapdoubletGate','dipsingletGate','dipdoubletGate'))) loadGates()
+    if (ploidy=="haploid") {
+      print("Gating with haploid gates...")
+      yeast <- Subset(flowset,yeastGate)
+      singlets <- Subset(yeast,hapsingletGate)
+      doublets <- Subset(yeast,hapdoubletGate)
+    } else if (ploidy=="diploid") {
+      print("Gating with diploid gates...")
+      yeast <- Subset(flowset,yeastGate)
+      singlets <- Subset(yeast,dipsingletGate)
+      doublets <- Subset(yeast,dipdoubletGate)
+    } else {
+      stop('Error: You must define ploidy="haploid" or ploidy="diploid"')
+    }
   }
-
   if (only==F) {
     # Normalize and summarize each subset
     print("Summarizing all yeast events...")
