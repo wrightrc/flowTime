@@ -57,6 +57,12 @@ flowTime:::yeastGate
 #I will also write a function to create new gateSets and then they can be set to default
 
 
+#OK, so I have gone back and edited summary() to handle the smoother annotation functions I've written, and this works.
+#Now I need to work on gateCreator
+#save the Gates I currently have in memory
+saveGates(fileName = 'FCGates.RData')
+
+
 
 ################
 #YPH

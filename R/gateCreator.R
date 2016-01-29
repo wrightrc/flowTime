@@ -54,8 +54,8 @@
 #                                     2e4,5e4,20e5,30e5,5e5,8.5e5),
 #                                     ncol=2,nrow=6,dimnames=list(rep(NA,6),c("FSC.A","FSC.H"))))
 
-# save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = 'data/EPJGates.RData')
-#' Title
+#save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = 'inst/extdata/C6Gates.RData')
+#' Save a yeast gate set
 #'
 #' @param yeastGate
 #' @param dipsingletGate
@@ -68,8 +68,8 @@
 #' @export
 #'
 #' @examples
-saveGates <- function(yeastGate = yeastGate, dipsingletGate = dipsingletGate, dipdoubletGate = dipdoubletGate, hapsingletGate = hapsingletGate, hapdoubletGate = hapdoubletGate, file = 'defaultGates.Rdata'){
-  save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = system.file("extdata", file, package = "flowTime"))
+saveGates <- function(yeastgate = yeastGate, dipsingletgate = dipsingletGate, dipdoubletgate = dipdoubletGate, hapsingletgate = hapsingletGate, hapdoubletgate = hapdoubletGate, fileName = 'defaultGates.Rdata'){
+  save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = paste0(system.file("extdata/", package = "flowTime"),fileName))
 }
 
 #' Create a polygon gate
