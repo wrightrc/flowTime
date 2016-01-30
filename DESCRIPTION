@@ -1,7 +1,7 @@
 Package: flowTime
 Title: Annotation and analysis of time-lapse and steady-state flow cytometry data
 Version: 0.99.1
-Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", role = c("aut", "cre")), person("Edith", "Pierre-Jerome", email = "", role = c("aut")))
+Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", role = c("aut", "cre")), person("Nick", "Bolten", role = c("aut")),person("Edith", "Pierre-Jerome", email = "", role = c("aut")))
 Description: In the past we have always generated summary statistics for each flowset for each timepoint and then annotated and analyzed
   these summary statistics. This method loses a great deal of the power that comes from the large amounts of individual cell data
   generated in flow cytometry, by essentially collapsing this data into a bulk measurement. The following functions will facilitate
