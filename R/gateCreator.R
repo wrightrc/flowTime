@@ -17,6 +17,16 @@ saveGates <- function(yeastgate = yeastGate, dipsingletgate = dipsingletGate, di
                                                                                                             package = "flowTime"), fileName))
 }
 
+#' List existing gate sets saved in package memory
+#'
+#' @return
+#' @export
+#'
+#' @examples
+listGates <- function(){
+  list.files(system.file("extdata/Gates/", package = "flowTime"))
+}
+
 #' Create a polygon gate
 #'
 #' @param x
@@ -71,7 +81,7 @@ ploidy <- function(flowframe) {
 #' @examples
 setGates <- function(gatesFile) {
   load(paste0(system.file("extdata/Gates/", package = "flowTime"), gatesFile))
-  saveGates(fileName = paste0(system.file("extdata/Gates/", package = "flowTime"), "defaultGates.RData"))
+  saveGates(fileName = "defaultGates.RData")
 }
 
 #' Load a yeast gate file
