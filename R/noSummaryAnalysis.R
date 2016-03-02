@@ -27,7 +27,7 @@ createAnnotation <- function(yourFlowSet) {
 #' @examples
 annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
   pData(yourFlowSet)$name <- sampleNames(yourFlowSet)
-  mdata <- join(pData(yourFlowSet), annotation_df, by = mergeBy)
+  mdata <- plyr::join(pData(yourFlowSet), annotation_df, by = mergeBy)
   rownames(mdata) <- as.character(mdata[, mergeBy])
   pData(yourFlowSet) <- mdata
   yourFlowSet
@@ -97,34 +97,34 @@ steadyState <- function(flowset, gated = F, ploidy = "diploid", only = "singlets
   if (only == F) {
 
     print("Converting all yeast events...")
-    yeastdF <- ddply(pData(yeast), colnames(pData(yeast))[-1], function(tube) {
+    yeastdF <- plyr::ddply(pData(yeast), colnames(pData(yeast))[-1], function(tube) {
       fsApply(x = yeast[tube$name], rbind, use.exprs = T)
     })
     print("Converting doublets events...")
-    doubletsdF <- ddply(pData(doublets), colnames(pData(doublets))[-1], function(tube) {
+    doubletsdF <- plyr::ddply(pData(doublets), colnames(pData(doublets))[-1], function(tube) {
       fsApply(x = doublets[tube$name], rbind, use.exprs = T)
     })
 
     print("Converting singlets events...")
-    singletsdF <- ddply(pData(doublets), colnames(pData(doublets))[-1], function(tube) {
+    singletsdF <- plyr::ddply(pData(doublets), colnames(pData(doublets))[-1], function(tube) {
       fsApply(x = doublets[tube$name], rbind, use.exprs = T)
     })
   }
   if (only == "singlets") {
     print("Converting singlets events...")
-    singletsdF <- ddply(pData(singlets), colnames(pData(singlets))[-1], function(tube) {
+    singletsdF <- plyr::ddply(pData(singlets), colnames(pData(singlets))[-1], function(tube) {
       fsApply(x = singlets[tube$name], rbind, use.exprs = T)
     })
     return(singletsdF)
   } else if (only == "doublets") {
     print("Converting doublets events...")
-    doubletsdF <- ddply(pData(doublets), colnames(pData(doublets))[-1], function(tube) {
+    doubletsdF <- plyr::ddply(pData(doublets), colnames(pData(doublets))[-1], function(tube) {
       fsApply(x = doublets[tube$name], rbind, use.exprs = T)
     })
     return(doubletsdF)
   } else if (only == "yeast") {
     print("Converting all yeast events...")
-    yeastdF <- ddply(pData(yeast), colnames(pData(yeast))[-1], function(tube) {
+    yeastdF <- plyr::ddply(pData(yeast), colnames(pData(yeast))[-1], function(tube) {
       fsApply(x = yeast[tube$name], rbind, use.exprs = T)
     })
     return(yeastdF)
