@@ -28,7 +28,7 @@ plate2<-read.flowSet(path=paste(experiment,"_2/",sep=""),alter.names=T)
 sampleNames(plate2)<-paste("2_",sampleNames(plate2),sep="")
 dat<-rbind2(plate1,plate2)
 ```
-Now we import the table of metadata. The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. 
+For this example, we will import the table of metadata. The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. 
 ```{r}
 annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
 head(annotation)
@@ -38,8 +38,9 @@ sampleNames(dat) == annotation$name
 We can also create this column from our dataset and attach the annotation columns. Alternatively one can use the `createAnnotation` function to create a dataframe with the appropriate `name` column that can then be filled in via R-code or saved as a csv file and filled via a spreadsheet editor. The order of the entries in `annotation` does not matter, so long as each entry in `sampleNames(dat)` is represented. The `annotateFlowSet` function will match entries by the `mergeBy` column  
 ```{r eval = F}
 annotation <- cbind(annotation, 'name' =  sampleNames(dat)) 
+# or
 annotation <- createAnnotation(yourFlowSet = dat)
-write.csv(annotation)
+write.csv(annotation, file = 'path/to/yourAnnotation.csv')
 ```
 Finally we can attach this metadata to the flowSet using the `annotateFlowSet` function. 
 ```{r}
