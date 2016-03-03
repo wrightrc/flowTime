@@ -2,6 +2,7 @@
 % Please edit documentation in R/noSummaryAnalysis.R
 \name{annotateFlowSet}
 \alias{annotateFlowSet}
+\title{Annotate a flowSet with experimental metadata}
 \usage{
 annotateFlowSet(yourFlowSet, annotation_df, mergeBy = "name")
 }

@@ -10,7 +10,7 @@ createAnnotation <- function(yourFlowSet) {
   annotation_df <- data.frame(name = sampleNames(yourFlowSet))
 }
 
-# Annotate the flowSet --------
+#' Annotate a flowSet with experimental metadata
 #' @description  Add annotations to a flowSets phenoData and plate numbers, strain names, and treatment also set T0
 #' @param yourFlowSet, a flowSet with sampleNames of the format 'plate#_Well', we typically use the following code chunk to read data from individual plates as exported from BD Accuri C6 software.
 #' plate0<-read.flowSet(path=paste(experiment,'/',sep=''),alter.names=T)
