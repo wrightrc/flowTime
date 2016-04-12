@@ -11,20 +11,17 @@ createAnnotation <- function(yourFlowSet) {
 }
 
 #' Annotate a flowSet with experimental metadata
-#' @description  Add annotations to a flowSets phenoData and plate numbers, strain names, and treatment also set T0
-#' @param yourFlowSet, a flowSet with sampleNames of the format 'plate#_Well', we typically use the following code chunk to read data from individual plates as exported from BD Accuri C6 software.
-#' plate0<-read.flowSet(path=paste(experiment,'/',sep=''),alter.names=T)
-#' sampleNames(plate0)<-paste('0_',sampleNames(plate0),sep='')
-#' plate1<-read.flowSet(path=paste(experiment,'_1/',sep=''),alter.names=T)
-#' sampleNames(plate1)<-paste('1_',sampleNames(plate1),sep='')
-#' fullSet<-rbind2(plate0,plate1)
-#' @param annotation_df, A data frame with columns 'well', 'strain', 'treatment', containing all of the wells in the flowset labeled with the strain and treatment in that well.
-#' Get a vector of all of the wells in your flowset with:
-#' well <- fsApply(testSet,function(x) strsplit(keyword(x)$GUID,'.fcs')[[1]])
-#' Assemble corresponding strain and treatment vectors and then cbind them together.
+#'
+#' @description Add annotations to a flowSets phenoData and plate numbers, strain names, and treatment also set T0
+#'
+#' @param yourFlowSet a flowSet with sampleNames of the format 'plate#_Well', we typically use the following code chunk to read data from individual plates as exported from BD Accuri C6 software.d
+#' @param annotation_df A data frame with columns 'well', 'strain', 'treatment', containing all of the wells in the flowset labeled with the strain and treatment in that well.
+#' @param mergeBy the unique identifier column
 #' @return An annotated flowSet
+#' @export
 #'
 #' @examples
+#'
 annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
   pData(yourFlowSet)$name <- sampleNames(yourFlowSet)
   mdata <- plyr::join(pData(yourFlowSet), annotation_df, by = mergeBy)
