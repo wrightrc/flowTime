@@ -11,6 +11,7 @@ vignette: >
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = T)
 library(flowTime)
+library(ggplot2)
 ```
 This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining the florescent reporter levels of a synthetic biological circuit in liquid cultures of budding yeast. Here, we analyze a circuit in which a florescent reporter is fused to a protein that is degraded over time after addition of an inducer molecule. At some time post-induction (as optimized by the experimenter) flourescence of these cultures is analyzed by flow cytometry. Here we demostrate how to import the resulting .fcs files into R, annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), and compile the relevant events and measurements.
 

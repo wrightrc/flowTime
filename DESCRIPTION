@@ -14,7 +14,7 @@ Description: In the past we have always generated summary statistics for
     expressing fluorescent proteins on a BD Accuri SORP cytometer, but may be
     adapted for analysis of other data.
 Depends:
-    R (>= 3.1.0),
+    R (>= 2.15.0),
     plyr,
     flowCore,
 License: Artistic-2.0
