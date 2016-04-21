@@ -186,7 +186,7 @@ renameflcols <- function(x, channel = "FL1.A", transform = F) {
   return(x)
 }
 
-#' summary.cyt:
+#' summarizeFlow:
 #' Gates a sample to all yeast, then singlet, then doublets
 #' Does the work of singletsummary.cyt,doubletsummary.cyt,yeastsummary.cyt
 #' Also calculates singlet to doublet ratio
@@ -206,7 +206,7 @@ renameflcols <- function(x, channel = "FL1.A", transform = F) {
 #' @export
 #'
 #' @examples
-summary.cyt <- function(flowset, transform = F, channel = "FL1.A", gated = F, ploidy = F, moments = F,
+summarizeFlow <- function(flowset, transform = F, channel = "FL1.A", gated = F, ploidy = F, moments = F,
                         split = F, only = F) {
 
   # Number of experiments
@@ -295,7 +295,6 @@ summary.cyt <- function(flowset, transform = F, channel = "FL1.A", gated = F, pl
 #'
 #' @examples
 addnorm <- function(frame, factor_in = c("strain", "treatment"), method = 1, column = "FL3.Amean_bs") {
-  library(plyr)
   if ((sum(colnames(frame) == column)) == 0) {
     if ((sum(colnames(frame) == "FL3.A_bs")) == 0) {
       stop("Could not find the background-subtracted values column. \n           This script requires that there be a column named \n           FL1.Amean_bs, FL1.A_bs, or the user-defined column using\n           column='desired-column'")
