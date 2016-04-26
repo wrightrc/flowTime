@@ -49,13 +49,17 @@ adat <- annotateFlowSet(yourFlowSet = dat, annotation_df = annotation, mergeBy =
 head(rownames(pData(adat)))
 head(pData(adat))
 ```
-
+Now we can save this flowSet and anyone in perpetuity can load and analyze this annotated flowSet with ease!
+```{r, eval = F}
+write.flowSet(adat, outdir = 'your/favorite/directory')
+read.flowSet('flowSet folder', path = 'your/flow/directory', phenoData = 'annotation.txt')
+```
 #Compiling and plotting data
 Now we are ready to analyze the raw data in this `flowSet`. First we load the set of gates that will be used to subset our data. To analyze this steady-state or single time point experiment we will use the `steadyState` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of the relevant data and metadata for each event. This `dataframe` can then be used to visualize the full data set. 
 ```{r fig.width = 4, fig.height = 4}
 loadGates(gatesFile = 'SORPGates.RData')
 dat.SS <- steadyState(flowset = adat, ploidy = 'diploid', only = 'singlets')
 
-p <- ggplot(dat.SS, aes(as.factor(treatment), FL2.A, fill = AFB)) + geom_boxplot(outlier.size = 0) + facet_grid(IAA~AFB) + theme_classic(base_family = 'Arial', base_size = 16) + ylim(c(-1000,10000)) + xlab(expression(paste('Auxin (',mu,'M)',sep = ""))) + ylab('Fluorescence (AU)') + theme(legend.position="none")
+p <- ggplot(dat.SS, aes(as.factor(treatment), FL2.A, fill = AFB)) + geom_boxplot(outlier.size = NA) + facet_grid(IAA~AFB) + theme_classic(base_family = 'Arial', base_size = 16) + ylim(c(-1000,10000)) + xlab(expression(paste('Auxin (',mu,'M)',sep = ""))) + ylab('Fluorescence (AU)') + theme(legend.position="none")
 p
 ```
