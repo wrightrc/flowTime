@@ -12,7 +12,7 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = T)
 library(flowTime)
 ```
-This vignette will guide you through analysis of an example flow cytometry dataset from an experiment examining time-lapse florescence reporter levels from a synthetic biological circuit in liquid cultures of budding yeast. In this example circuit, fluorescent reporter expression is mediated by a transcription factor/transcriptional repressor complex. The transcriptional repressor is degraded via the ubitquitin proteasome system, in response to a small molecule. Fluorescence levels are measured approximately every 10 minutes by flow cytometry. Here we demostrate how to import the resulting .fcs files into R, gate and annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), generate summary statistics for each sample and timepoint and finally plot this data (in this case, activation curves).
+This vignette will guide you through analysis of an example flow cytometry data set from an experiment examining time-lapse florescence reporter levels from a synthetic biological circuit in liquid cultures of budding yeast. In this example circuit, fluorescent reporter expression is mediated by a transcription factor/transcriptional repressor complex. The transcriptional repressor is degraded via the ubiquitin proteasome system, in response to a small molecule. Fluorescence levels are measured approximately every 10 minutes by flow cytometry. Here we demonstrate how to import the resulting .fcs files into R, gate and annotate this data with experimental metadata (e.g. the `strain` and `treatment` for each sample), generate summary statistics for each sample and time point and finally plot this data (in this case, activation curves).
 
 #Importing and annotating data
 Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
@@ -22,7 +22,7 @@ plate1<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowT
 #sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
 dat<-plate1
 ```
-If you have several plates this code can be repeated and each plate can be combined (using `rbind2`) to assemble the full dataset.
+If you have several plates this code can be repeated and each plate can be combined (using `rbind2`) to assemble the full data set.
 ```{r eval = F}
 plate2<-read.flowSet(path=paste(experiment,"_2/",sep=""),alter.names=T)
 sampleNames(plate2)<-paste("2_",sampleNames(plate2),sep="")
@@ -32,7 +32,7 @@ Now we import the table of metadata.
 ```{r}
 annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 ```
-The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. We can also create this column from our dataset and attach the annotation columns. The order of the unique identifier column does not matter, as `annotateFlowSet` will join `annotation` to `dat` by matching identifiers.
+The `sampleNames` of the assembled `flowSet` (`dat` in this example) must match that of a unique identifier column of `annotation`. We can also create this column from our data set and attach the annotation columns. The order of the unique identifier column does not matter, as `annotateFlowSet` will join `annotation` to `dat` by matching identifiers.
 ```{r eval = F}
 sampleNames(dat) #view the sample names
 sampleNames(dat) == annotation$id #replace 'id' with the unique identifier column to test if this column is identical to the sample names of your flowset
@@ -46,7 +46,7 @@ head(pData(adat))
 ```
 
 #Compiling and plotting data
-Now we are ready to analyze the raw data in this `flowSet`. For this time-course experiment we will use the `summarizeFlow` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of summary statistics for the specified channel each `flowFrame`. This `dataframe` can then be used to visualize the full dataset. 
+Now we are ready to analyze the raw data in this `flowSet`. For this time-course experiment we will use the `summarizeFlow` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of summary statistics for the specified channel each `flowFrame`. This `dataframe` can then be used to visualize the full data set. 
 ```{r fig.width= 7}
 #load the gate set for BD Accuri C6 cytometer
 loadGates(gatesFile = 'C6Gates.RData')
