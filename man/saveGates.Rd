@@ -6,7 +6,7 @@
 \usage{
 saveGates(yeastgate = yeastGate, dipsingletgate = dipsingletGate,
   dipdoubletgate = dipdoubletGate, hapsingletgate = hapsingletGate,
-  hapdoubletgate = hapdoubletGate, fileName = "defaultGates.Rdata")
+  hapdoubletgate = hapdoubletGate, fileName = "defaultGates.RData")
 }
 \arguments{
 \item{yeastgate}{a gate object defining the population of yeast cells}
@@ -28,7 +28,7 @@ a .RData file in the "extdata" folder of the package containing the specified ga
 Save a yeast gate set
 }
 \examples{
-loadGates()
+loadGates("defaultGates.RData")
 saveGates()
 }
 

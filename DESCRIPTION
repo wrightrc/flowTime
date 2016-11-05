@@ -21,7 +21,7 @@ Description: This package was developed for analysis of both dynamic and steady 
     lapse data utilizing all of the data collected from the thousands of individual
     cells in each sample.
 Depends:
-    R (>= 2.14.0),
+    R (>= 3.3),
     flowCore,
     plyr,
     dplyr

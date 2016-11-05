@@ -19,7 +19,7 @@ qa.gating <- function(x, threshold = 100) {
   if (x.class == "flowFrame") {
     counts <- length(exprs(x[, 1]))
   } else if (x.class == "flowSet") {
-    counts <- fsApply(x, length, use.exprs = T)
+    counts <- fsApply(x, length, use.exprs = TRUE)
   } else {
     print("Input must be a flowSet or flowFrame")
   }

@@ -36,7 +36,7 @@ fl1transform <- function(x, transform = FALSE) {
       x <- transform(x, FL1.A = FL1.A/FSC.A * 10^4)
     } else if (transform == "log") {
       x <- transform(x, FL1.A = log(FL1.A))
-    } else if (transform == F) {
+    } else if (transform == FALSE) {
       x <- x  # do nothing.  Is this necessary?
     } else {
       stop("No legitimate transform set.  Use transform=\"log\" or transform=\"fscanorm\".")
@@ -82,7 +82,7 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE
   # Initialize empty matrices/data frames to increase efficiency
   warnings <- c()
 
-  if (moments == T) {
+  if (moments == TRUE) {
     requireNamespace(moments)
   }
 
@@ -94,7 +94,7 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE
   # Acquisition time - how long it took to take the sample, in seconds
   atime <- fsApply(flowset, function(x) as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000)
 
-  events <- fsApply(flowset, function(x) length(x[, 1]), use.exprs = T)
+  events <- fsApply(flowset, function(x) length(x[, 1]), use.exprs = TRUE)
   uL <- fsApply(flowset, function(x) as.integer(keyword(x)$`$VOL`)/1000)
   conc <- events/uL
 
@@ -104,26 +104,26 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE
     }
   }
 
-  fl_mean <- fsApply(flowset, function(x) mean(x[, channel]), use.exprs = T)
-  fl_median <- fsApply(flowset, function(x) median(x[, channel]), use.exprs = T)
-  fl_sd <- fsApply(flowset, function(x) sd(x[, channel]), use.exprs = T)
+  fl_mean <- fsApply(flowset, function(x) mean(x[, channel]), use.exprs = TRUE)
+  fl_median <- fsApply(flowset, function(x) median(x[, channel]), use.exprs = TRUE)
+  fl_sd <- fsApply(flowset, function(x) sd(x[, channel]), use.exprs = TRUE)
   fl <- data.frame(fl_mean, fl_median, fl_sd)
   colnames(fl) <- paste(channel, c("mean", "median", "sd"), sep = "")
 
   # Do we want mean fl values for data split into 4 evenly sized chunks?
-  if (split == T) {
+  if (split == TRUE) {
     split_table <- fsApply(flowset, splitFrame)
-    split_table <- data.frame(matrix(unlist(split_table), ncol = 4, byrow = T))
+    split_table <- data.frame(matrix(unlist(split_table), ncol = 4, byrow = TRUE))
     colnames(split_table) <- paste("split", 1:4, sep = "")
     fl <- cbind(fl, split_table)
   }
 
   # Do we want the first few moments?
-  if (moments == T) {
+  if (moments == TRUE) {
     requireNamespace(moments)
-    fl_var <- data.frame(fsApply(flowset, function(x) var(x[, channel]), use.exprs = T))
-    fl_skew <- data.frame(fsApply(flowset, function(x) moments::skewness(x[, channel]), use.exprs = T))
-    fl_kurt <- data.frame(fsApply(flowset, function(x) moments::kurtosis(x[, channel]), use.exprs = T))
+    fl_var <- data.frame(fsApply(flowset, function(x) var(x[, channel]), use.exprs = TRUE))
+    fl_skew <- data.frame(fsApply(flowset, function(x) moments::skewness(x[, channel]), use.exprs = TRUE))
+    fl_kurt <- data.frame(fsApply(flowset, function(x) moments::kurtosis(x[, channel]), use.exprs = TRUE))
     fl_moments <- data.frame(fl_var, fl_skew, fl_kurt)
     colnames(fl_moments) <- paste(channel, c("var", "skew", "kurt"), sep = "")
     fl <- cbind(fl, fl_moments)
@@ -166,7 +166,7 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE
 #'
 renameflcols <- function(x, channel = "FL1.A", transform = FALSE) {
   cols <- c("mean", "median", "sd")
-  if (transform != F) {
+  if (transform != FALSE) {
     if (transform == "fscanorm") {
       tname <- "FL1_FSC"
     } else if (transform == "log") {
@@ -216,11 +216,11 @@ summarizeFlow <- function(flowset, transform = FALSE, channel = "FL1.A", gated =
   if (channel == "FSC.A" & transform == "fscanorm") {
     print("Channel FSC.A selected with no transform setting set.")
     print("Defaulting to no transform (set transform=\"log\" for log transform)")
-    transform = F
+    transform = FALSE
   }
 
   # Transform FL1.A
-  if (transform != F) {
+  if (transform != FALSE) {
     print(paste("Transforming FL1.A using", transform, "transform..."))
     flowset <- fl1transform(flowset, transform = transform)
 
@@ -228,7 +228,7 @@ summarizeFlow <- function(flowset, transform = FALSE, channel = "FL1.A", gated =
 
 
   # Gate the samples Gate the samples
-  if (gated == T) {
+  if (gated == TRUE) {
     print("Summarizing all events...")
     flowsum <- flsummary(flowset, channel = channel, moments = moments, split = split, transform = transform)
     return(flowsum)
@@ -250,7 +250,7 @@ summarizeFlow <- function(flowset, transform = FALSE, channel = "FL1.A", gated =
       stop("Error: You must define ploidy=\"haploid\" or ploidy=\"diploid\"")
     }
 
-    if (only == F) {
+    if (only == FALSE) {
       # Normalize and summarize each subset
       print("Summarizing all yeast events...")
       yeastsum <- flsummary(yeast, channel = channel, moments = moments, split = split, transform = transform)

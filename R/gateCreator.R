@@ -10,10 +10,10 @@
 #' @return a .RData file in the "extdata" folder of the package containing the specified gates
 #' @export
 #'
-#' @examples loadGates()
+#' @examples
+#' loadGates("defaultGates.RData")
 #' saveGates()
-saveGates <- function(yeastgate = yeastGate, dipsingletgate = dipsingletGate, dipdoubletgate = dipdoubletGate,
-                      hapsingletgate = hapsingletGate, hapdoubletgate = hapdoubletGate, fileName = "defaultGates.Rdata") {
+saveGates <- function(yeastgate = yeastGate, dipsingletgate = dipsingletGate, dipdoubletgate = dipdoubletGate, hapsingletgate = hapsingletGate, hapdoubletgate = hapdoubletGate, fileName = "defaultGates.RData") {
   save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = system.file("extdata", "Gates", fileName, package = "flowTime"))
 }
 
@@ -94,7 +94,8 @@ setGates <- function(gatesFile = "defaultGates.RData") {
 #' @return gate objects created in the current environment
 #' @export
 #'
-#' @examples loadGates()
+#' @examples
+#' loadGates()
 loadGates <- function(gatesFile = "defaultGates.RData") {
   load(system.file("extdata", "Gates", gatesFile, package = "flowTime"), envir = globalenv())
 }
