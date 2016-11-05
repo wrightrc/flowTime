@@ -1,7 +1,7 @@
 Package: flowTime
 Title: Annotation and analysis of biological dynamic systems by flow cytometry
     data
-Version: 0.99.1
+Version: 0.99.2
 Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", role = c("aut", "cre")), person("Nick", "Bolten", email = "nbolten@gmail.com", role = c("aut")),person("Edith", "Pierre-Jerome", email = "", role = c("aut")))
 Description: This package was developed for analysis of both dynamic and steady state experiments
     examining the function of gene regulatory networks in yeast (strain W303)
