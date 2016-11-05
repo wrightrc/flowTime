@@ -7,12 +7,17 @@
 createAnnotation(yourFlowSet)
 }
 \arguments{
-\item{yourFlowSet}{}
+\item{yourFlowSet}{the flowSet to create an annotation data frame for}
 }
 \value{
-annotation_df
+annotation_df a data frame containing the sample names of your flow set
 }
 \description{
-Create an annotation dataframe
+Creates a data frame with rows containing the sample names of your flow set that can then be filled in with experimental metadata.
+}
+\examples{
+dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+annotation <- createAnnotation(yourFlowSet = dat)
+head(annotation)
 }
 

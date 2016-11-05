@@ -7,9 +7,21 @@
 polygate(x, y, filterID = "newGate", channels = c("FSC.A", "FSC.H"))
 }
 \arguments{
-\item{channels}{}
+\item{x}{a vector of x coordinates}
+
+\item{y}{a vector of y coordinates}
+
+\item{filterID}{name of the gate}
+
+\item{channels}{vector containing the channels matching the x and y coordinates above}
+}
+\value{
+a polygon gate object
 }
 \description{
 Create a polygon gate
+}
+\examples{
+polygate(x = c(1,1,10000,10000), y = c(1,10000, 10000, 1), )
 }
 

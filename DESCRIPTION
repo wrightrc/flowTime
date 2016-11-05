@@ -1,32 +1,44 @@
 Package: flowTime
-Title: Annotation and analysis of time-lapse and steady-state flow cytometry
+Title: Annotation and analysis of biological dynamic systems by flow cytometry
     data
-Version: 0.99.1
+Version: 0.99.0
 Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", role = c("aut", "cre")), person("Nick", "Bolten", email = "nbolten@gmail.com", role = c("aut")),person("Edith", "Pierre-Jerome", email = "", role = c("aut")))
-Description: In the past we have always generated summary statistics for
+Description: This package was developed for analysis of both dynamic and steady state experiments
+    examining the function of gene regulatory networks in yeast (strain W303)
+    expressing fluorescent reporter proteins using a BD Accuri C6 and SORP cytometers. However, the
+    functions are for the most part general and may be
+    adapted for analysis of other organisms using other flow cytometers. Functions in this
+    package facilitate the annotation of flow cytometry data with experimental metadata, as
+    is requisite for dissemination and general ease-of-use. Functions for creating, saving
+    and loading gate sets are also included.
+    In the past, we have typically generated summary statistics for
     each flowset for each timepoint and then annotated and analyzed these
     summary statistics. This method loses a great deal of the power that comes
     from the large amounts of individual cell data generated in flow cytometry,
-    by essentially collapsing this data into a bulk measurement. The following
-    functions will facilitate annotation and analysis of steady-state or time-
+    by essentially collapsing this data into a bulk measurement after subsetting.
+    In addition to these summary functions, this package also contains
+    functions to facilitate annotation and analysis of steady-state or time-
     lapse data utilizing all of the data collected from the thousands of individual
-    cells in each sample. This package was developed based for analysis of yeast
-    expressing fluorescent proteins on a BD Accuri SORP cytometer, but may be
-    adapted for analysis of other data.
+    cells in each sample.
 Depends:
     R (>= 2.14.0),
-    plyr,
     flowCore,
-License: Artistic-2.0
-LazyData: true
-Imports:
     plyr,
-    flowCore
+    dplyr
+License: Artistic-2.0 + file LICENSE
+LazyData: true
+biocViews:
+    FlowCytometry,
+    TimeCourse,
+    Visualization,
+    DataImport,
+    CellBasedAssays
 Suggests:
     knitr,
     rmarkdown,
     flowViz,
     ggplot2,
-    BiocGenerics
+    BiocGenerics,
+    moments
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

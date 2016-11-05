@@ -1,11 +1,14 @@
 #' Create an annotation dataframe
+#' @description Creates a data frame with rows containing the sample names of your flow set that can then be filled in with experimental metadata.
 #'
-#' @param yourFlowSet
+#' @param yourFlowSet the flowSet to create an annotation data frame for
 #'
-#' @return annotation_df
+#' @return annotation_df a data frame containing the sample names of your flow set
 #' @export
 #'
-#' @examples
+#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' annotation <- createAnnotation(yourFlowSet = dat)
+#' head(annotation)
 createAnnotation <- function(yourFlowSet) {
   annotation_df <- data.frame(name = sampleNames(yourFlowSet))
 }
@@ -20,7 +23,9 @@ createAnnotation <- function(yourFlowSet) {
 #' @return An annotated flowSet
 #' @export
 #'
-#' @examples
+#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+#' annotateFlowSet(dat, annotation, mergeBy = "name")
 #'
 annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
   pData(yourFlowSet)$name <- sampleNames(yourFlowSet)
@@ -31,9 +36,9 @@ annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
 }
 
 
-# Set T0 ------------------------------------------------------------------ #find time of the
-# beginning of acquisition for each well in minutes btime_raw <-
-# fsApply(yourFlowSet,function(x)as.numeric(unlist(strsplit(keyword(x)$`$BTIM`,split=':'))))
+# Set T0
+# find time of the beginning of acquisition for each well in minutes
+#btime_raw <- fsApply(yourFlowSet,function(x)as.numeric(unlist(strsplit(keyword(x)$`$BTIM`,split=':'))))
 # btime <- apply(btime_raw,1,function(x)x[1]*60+x[2]+x[3]/60+x[4]/6000) #Set the cell-Time
 # relative to well-Time #set time relative to T0 time <- btime-btime[T0]
 # yourFlowSet<-fsApply(yourFlowSet, function(well) { minTime<-min(exprs(well)[,'Time'])
@@ -41,31 +46,25 @@ annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
 # wellTime<-pData(yourFlowSet)[identifier(well),'time']
 # exprs(well)[,'Time']<-apply(exprs(well$Time),1,function(cellTime) {
 # (cellTime-minTime)*timeStep/60+wellTime }) well }) Dot plot with an overlayed box plot
-# ------------------------------------- used to add the N below each sample
-give.n <- function(x) {
-  return(c(y = -0.15, label = length(x)))
-}
-# p <- ggplot(data = df, aes(x = factor(strain), y = FL2.A, fill=treatment, ymin=min(FL2.A)*.8,
-# ymax = max(FL2.a)*1.05)) #set up data p <- p + geom_point(alpha=0.5,
-# position=position_jitterdodge(dodge.width = 0.9)) # plot transparent (alpha<1) points for each
-# datum p <- p + geom_boxplot(outlier.size = 0, position = position_dodge(width = .9)) #add a
-# boxplot overtop to summarize the inner quartiles of the data, leave off outliers as they are
-# plotted above p <- p + stat_summary(fun.data = give.n, geom = 'text',
-# position=position_dodge(width = .9), size=3, angle=90) #add N below each sample, this could
-# also be modified to include other sample info p #show me the plot!
 
 
-# Steady state analysis ---------------------------------------------------
-#' Find significant differences in steady state fluorescence
-#' @description Compares several replicates of strain-treatment combinations for statistically significant differences in steady-state fluorescence
-#' @param yourFlowSets
-#' @param ploidy = the gate to subset your flowsets based on the ploidy of you strains and your cytometer.
-#' @param only= 'yeast', 'singlets', or 'doublets'
-#' @param gated is the data already gated?
-#' @return
+
+#' Analysis of steady state fluorescence flow cytometry
+#' @description Generates a data frame which can be used to visualize and analyze steady state flow cytometry data. Steady state in this case means that
+#' @param flowset your flowSet to be analyzed
+#' @param ploidy \code{character} gate to subset your flowset based on the ploidy of you strains
+#' @param only \code{character} which population of events to analyze, 'yeast', 'singlets', or 'doublets'?
+#' @param gated \code{boolean} is the data already gated?
+#' @return a data frame containing all of the selected subset of events from the original flowSet
 #' @export
 #' @examples
-steadyState <- function(flowset, gated = F, ploidy = "diploid", only = "singlets") {
+#' dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+#' dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
+#' loadGates(gatesFile = 'SORPGates.RData')
+#' steadyState(dat, gated = FALSE, ploidy = "diploid", only = "singlets")
+#'
+steadyState <- function(flowset, gated = FALSE, ploidy = "diploid", only = "singlets") {
 
   ### Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)

@@ -2,18 +2,27 @@
 % Please edit documentation in R/summaryAnalysis.R
 \name{renameflcols}
 \alias{renameflcols}
-\title{rename flsummary data
-keeping it separate for ease of use
-probably slow due to for loop}
+\title{Rename flsummary data}
 \usage{
-renameflcols(x, channel = "FL1.A", transform = F)
+renameflcols(x, channel = "FL1.A", transform = FALSE)
 }
 \arguments{
-\item{transform}{}
+\item{x}{\code{data frame} with columns to be renamed}
+
+\item{channel}{\code{character} that channel that was previously summarized}
+
+\item{transform}{\code{character} how was the data transformed? FALSE if it was not}
+}
+\value{
+the full \code{data frame} with renamed columns
 }
 \description{
-rename flsummary data
-keeping it separate for ease of use
-probably slow due to for loop
+Rename flsummary data
+}
+\examples{
+plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names= TRUE)
+flsummary(plate1, )
+renameflcols(plate1, channel = "FL3.A", transform = FALSE)
+
 }
 

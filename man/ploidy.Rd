@@ -2,16 +2,22 @@
 % Please edit documentation in R/gateCreator.R
 \name{ploidy}
 \alias{ploidy}
-\title{Ploidy: Tries to guess the ploidy of a given flowframe using FSC.A/FSC.H ratio.
-Diploids are typically 5um x 6um ellipsoids while haploids are typically 4um x 4um spheroids. As a result, diploids are longer and you get a larger 'area/volume' FSC.A. 'Width' might also be useful.}
+\title{Guess the ploidy of a given flowframe}
 \usage{
 ploidy(flowframe)
 }
 \arguments{
-\item{flowframe}{}
+\item{flowframe}{the flowFrame you would like to identify the ploidy of}
+}
+\value{
+"Diploid" or "Haploid" and the mean FSC.A/FSC.H quotient
 }
 \description{
-Ploidy: Tries to guess the ploidy of a given flowframe using FSC.A/FSC.H ratio.
-Diploids are typically 5um x 6um ellipsoids while haploids are typically 4um x 4um spheroids. As a result, diploids are longer and you get a larger 'area/volume' FSC.A. 'Width' might also be useful.
+Use the FSC.A/FSC.H ratio. Diploids are typically 5um x 6um ellipsoids while haploids are typically 4um x 4um spheroids. As a result, diploids are longer and you get a larger 'area/volume' FSC.A. 'Width' might also be useful on certain cytometers.
+}
+\examples{
+dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+ploidy(dat$A01.fcs)
+
 }
 

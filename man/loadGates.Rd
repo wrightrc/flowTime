@@ -2,16 +2,20 @@
 % Please edit documentation in R/gateCreator.R
 \name{loadGates}
 \alias{loadGates}
-\title{Load a yeast gate file
-into active memory}
+\title{Load a yeast gate file}
 \usage{
 loadGates(gatesFile = "defaultGates.RData")
 }
 \arguments{
-\item{gatesFile}{}
+\item{gatesFile}{the gates file to be loaded into memory}
+}
+\value{
+gate objects created in the current environment
 }
 \description{
-Load a yeast gate file
-into active memory
+Loads a set of yeast gates into active memory to be used in analysis functions
+}
+\examples{
+loadGates()
 }
 

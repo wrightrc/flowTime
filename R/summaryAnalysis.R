@@ -1,20 +1,15 @@
-### fl1transform: Normalizes FL1.A values in a flowset/flowframe to FSC.A values Should control
-### for (at least some) non-linearity in the values Also makes FL1.A proportional to
-### fluorescence/cell volume Used to multiply by the mean FSC.A value, but this is probably
-### statistically questionable. Now multiplies by a constant (10000) simply to keep the values in
-### the integer range.  If you specify transform='log', it will simply do a log transform to FL1.A
-### instead.
-
-#' Title
+#' Normalize FL1.A values in a flowSet by FSC.A values
+#' @description Should control for (at least some) non-linearity in the values Also makes FL1.A proportional to fluorescence/cell volume Used to multiply by the mean FSC.A value, but this is probably statistically questionable. Now multiplies by a constant (10000) simply to keep the values in the integer range.  If you specify transform='log', it will simply do a log transform to FL1.A instead.
 #'
-#' @param x
-#' @param transform
+#' @param x a \code{flowSet} or \code{flowFrame}
+#' @param transform \code{character 'log'} or \code{'fscanorm'} specifying how to transform the data
 #'
-#' @return
+#' @return a flowSet with FL1.A values normalized by FSC.A values
 #' @export
 #'
-#' @examples
-fl1transform <- function(x, transform = F) {
+#' @examples plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"),alter.names = TRUE)
+#' fl1transform(plate1)
+fl1transform <- function(x, transform = FALSE) {
   # Default scaling is 10^4 and is solely for making results human-readable
 
   # Handle both flowFrames and flowSets
@@ -65,21 +60,22 @@ fl1transform <- function(x, transform = F) {
   return(x)
 }
 
-### flsummary: Get summary statistics for fluorescence, other data
-
-#' Title
+#' Get summary statistics for fluorescence or other data channels of a flowSet
 #'
-#' @param flowset
-#' @param channel
-#' @param moments
-#' @param split
-#' @param transform
+#' @import plyr
+#' @import flowCore
+#' @param flowset the \code{flowSet} to create summary statistics for
+#' @param channel \code{character} the data channel to summarize
+#' @param moments \code{boolean} if \code{TRUE} then split each frame into early, middle, and late events
+#' @param split \code{boolean} split the data into four even chunks?
+#' @param transform \code{character} what transformation method was used in the summary?
 #'
-#' @return
+#' @return A \code{data frame} containing summary statistics (mean, median, SD) for the specified fluorescent channel and time moments of the flowSet.
 #' @export
 #'
-#' @examples
-flsummary <- function(flowset, channel = "FL3.A", moments = F, split = F, transform = F) {
+#' @examples plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' flsummary(plate1)
+flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE, transform = FALSE) {
   # Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)
 
@@ -87,7 +83,7 @@ flsummary <- function(flowset, channel = "FL3.A", moments = F, split = F, transf
   warnings <- c()
 
   if (moments == T) {
-    library(moments)
+    requireNamespace(moments)
   }
 
   # Get time of each frame in minutes of the day
@@ -124,10 +120,10 @@ flsummary <- function(flowset, channel = "FL3.A", moments = F, split = F, transf
 
   # Do we want the first few moments?
   if (moments == T) {
-    require(moments)
+    requireNamespace(moments)
     fl_var <- data.frame(fsApply(flowset, function(x) var(x[, channel]), use.exprs = T))
-    fl_skew <- data.frame(fsApply(flowset, function(x) skewness(x[, channel]), use.exprs = T))
-    fl_kurt <- data.frame(fsApply(flowset, function(x) kurtosis(x[, channel]), use.exprs = T))
+    fl_skew <- data.frame(fsApply(flowset, function(x) moments::skewness(x[, channel]), use.exprs = T))
+    fl_kurt <- data.frame(fsApply(flowset, function(x) moments::kurtosis(x[, channel]), use.exprs = T))
     fl_moments <- data.frame(fl_var, fl_skew, fl_kurt)
     colnames(fl_moments) <- paste(channel, c("var", "skew", "kurt"), sep = "")
     fl <- cbind(fl, fl_moments)
@@ -155,19 +151,20 @@ flsummary <- function(flowset, channel = "FL3.A", moments = F, split = F, transf
   return(flsummary)
 }
 
-#' rename flsummary data
-#' keeping it separate for ease of use
-#' probably slow due to for loop
+#' Rename flsummary data
 #'
-#' @param x
-#' @param channel
-#' @param transform
+#' @param x \code{data frame} with columns to be renamed
+#' @param channel \code{character} that channel that was previously summarized
+#' @param transform \code{character} how was the data transformed? FALSE if it was not
 #'
-#' @return
+#' @return the full \code{data frame} with renamed columns
 #' @export
 #'
-#' @examples
-renameflcols <- function(x, channel = "FL1.A", transform = F) {
+#' @examples plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names= TRUE)
+#' flsummary(plate1, )
+#' renameflcols(plate1, channel = "FL3.A", transform = FALSE)
+#'
+renameflcols <- function(x, channel = "FL1.A", transform = FALSE) {
   cols <- c("mean", "median", "sd")
   if (transform != F) {
     if (transform == "fscanorm") {
@@ -186,35 +183,38 @@ renameflcols <- function(x, channel = "FL1.A", transform = F) {
   return(x)
 }
 
-#' summarizeFlow:
-#' Gates a sample to all yeast, then singlet, then doublets
-#' Does the work of singletsummary.cyt,doubletsummary.cyt,yeastsummary.cyt
-#' Also calculates singlet to doublet ratio
+#' Generate summary statistics for a flowSet
+#'
+#' @description Gates a sample to all yeast, then singlet, then doublets.
+#' Also calculates singlet to doublet ratio.
 #' Returns a list of data frames, e.g. output$singlets, output$doublets, etc.
 #'
 #'
-#' @param flowset
-#' @param transform
-#' @param channel
-#' @param gated is the data already appropriately gated?
-#' @param ploidy
-#' @param moments
-#' @param split
-#' @param only
+#' @param flowset the \code{flowSet} to be summarized
+#' @param transform \code{character} the type of transformation to use, \code{FALSE} if none
+#' @param channel \code{character} which data channel should be summarized
+#' @param gated \code{boolean} is the data already appropriately gated?
+#' @param ploidy \code{character} does the flowSet contain haploid or diploid cells?
+#' @param moments \code{boolean} split the data into early, middle, and late moments?
+#' @param split \code{boolean} split the data into 4 equal parts
+#' @param only \code{character} summarize only "singlet", "doublet", or all "yeast" cells, FALSE will return all
 #'
-#' @return
+#' @return \code{data frame} containing the specified summary statistics of the specified cell populations for each frame
+#'
 #' @export
 #'
 #' @examples
-summarizeFlow <- function(flowset, transform = F, channel = "FL1.A", gated = F, ploidy = F, moments = F,
-                        split = F, only = F) {
+#' plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' summarizeFlow(plate1, transform = FALSE, channel = "FL1.A", gated = TRUE, ploidy = "diploid", moments = FALSE, only = "yeast")
+#'
+summarizeFlow <- function(flowset, transform = FALSE, channel = "FL1.A", gated = FALSE, ploidy = FALSE, moments = FALSE, split = FALSE, only = FALSE) {
 
   # Number of experiments
   n_experiments <- length(flowset)
 
   # If using channel='FSC.A', don't use fscanorm
   if (channel == "FSC.A" & transform == "fscanorm") {
-    print("Channel FSC.A selected with no transform= setting set.")
+    print("Channel FSC.A selected with no transform setting set.")
     print("Defaulting to no transform (set transform=\"log\" for log transform)")
     transform = F
   }
@@ -228,7 +228,12 @@ summarizeFlow <- function(flowset, transform = F, channel = "FL1.A", gated = F, 
 
 
   # Gate the samples Gate the samples
-  if (gated == F) {
+  if (gated == T) {
+    print("Summarizing all events...")
+    flowsum <- flsummary(flowset, channel = channel, moments = moments, split = split, transform = transform)
+    return(flowsum)
+  }
+  else {
     if (!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate", "dipsingletGate", "dipdoubletGate")))
       loadGates()
     if (ploidy == "haploid") {
@@ -244,56 +249,67 @@ summarizeFlow <- function(flowset, transform = F, channel = "FL1.A", gated = F, 
     } else {
       stop("Error: You must define ploidy=\"haploid\" or ploidy=\"diploid\"")
     }
-  }
-  if (only == F) {
-    # Normalize and summarize each subset
-    print("Summarizing all yeast events...")
-    yeastsum <- flsummary(yeast, channel = channel, moments = moments, split = split, transform = transform)
 
-    print("Summarizing doublets events...")
-    doubletsum <- flsummary(doublets, channel = channel, moments = moments, split = split, transform = transform)
-
-    print("Summarizing singlets events...")
-    singletsum <- flsummary(singlets, channel = channel, moments = moments, split = split, transform = transform)
-  } else {
-    if (only == "singlets") {
-      print("Summarizing singlets events...")
-      singletsum <- flsummary(singlets, channel = channel, moments = moments, split = split,
-                              transform = transform)
-      return(singletsum)
-    } else if (only == "doublets") {
-      print("Summarizing doublets events...")
-      doubletsum <- flsummary(doublets, channel = channel, moments = moments, split = split,
-                              transform = transform)
-      return(doubletsum)
-    } else if (only == "yeast") {
+    if (only == F) {
+      # Normalize and summarize each subset
       print("Summarizing all yeast events...")
       yeastsum <- flsummary(yeast, channel = channel, moments = moments, split = split, transform = transform)
-      return(yeastsum)
-    } else {
-      print("'only' must be 'singlets','doublets', or 'yeast'")
-      stop()
+
+      print("Summarizing doublets events...")
+      doubletsum <- flsummary(doublets, channel = channel, moments = moments, split = split, transform = transform)
+
+      print("Summarizing singlets events...")
+      singletsum <- flsummary(singlets, channel = channel, moments = moments, split = split, transform = transform)
+    }
+    else {
+      if (only == "singlets") {
+        print("Summarizing singlets events...")
+        singletsum <- flsummary(singlets, channel = channel, moments = moments, split = split,
+                                transform = transform)
+        return(singletsum)
+      }
+        else if (only == "doublets") {
+        print("Summarizing doublets events...")
+        doubletsum <- flsummary(doublets, channel = channel, moments = moments, split = split,
+                                transform = transform)
+        return(doubletsum)
+      }
+        else if (only == "yeast") {
+        print("Summarizing all yeast events...")
+        yeastsum <- flsummary(yeast, channel = channel, moments = moments, split = split, transform = transform)
+        return(yeastsum)
+      }
+      else {
+        print("'only' must be 'singlets','doublets', or 'yeast'")
+        stop()
+      }
     }
   }
-
   summary_list <- list(yeast = yeastsum, singlets = singletsum, doublets = doubletsum)
   return(summary_list)
 }
 
-# Produces a normalized fluorescence column 'normed' Expects the 'FL1.A_bs' column to exist (not
-# hard to extend to others/make it user selectable) Has two different methods, version 1 and
-# version 2, described in the script
-#' Title
+#' Normalize fluorescence
+#' @description Produces a normalized fluorescence column 'normed'. Expects the 'FL1.A_bs' column to exist or a column to be specified. Has two different methods, version 1 and version 2, described in the script
 #'
-#' @param frame
-#' @param factor_in
-#' @param method
-#' @param column
+#' @param frame \code{data frame} of summary statistics to be normalized
+#' @param factor_in \code{character vector} containing the varibles to split the data frame by
+#' @param method which normalization method to use, 1, 2 or 3.
+#' @param column \code{character} the column to apply the normalization to
 #'
-#' @return
+#' @return \code{data frame} containing the additional normalized variable
+#' @details Method 1, the default normalization method, takes the highest point in each dataset grouped by 'factor_in' and normalizes all values in the group by this point. This method is default because it works regardless of whether the data is a time series. Method 2 finds the mean value of all time points with time values less than 0 for each group and normalizes each group by this respective value. Requires a time series with negative time values to work. Version 3 fits a linear model to the pre-zero time points for each groups,  infers the y-intercept, and normalizes using this intercept. Method 3 also requires a
+# time series with negative time values to work.
 #' @export
 #'
 #' @examples
+#' dat <- read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"), alter.names = TRUE)
+#' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
+#' adat <- annotateFlowSet(dat, annotation)
+#' loadGates(gatesFile = 'C6Gates.RData')
+#' dat_sum <- summarizeFlow(adat, ploidy = "diploid", only = "singlets",channel = "FL1.A")
+#' dat_sum <- addnorm(dat_sum, c("strain", "treatment"), method = 1, column = "FL1.Amean")
+#'
 addnorm <- function(frame, factor_in = c("strain", "treatment"), method = 1, column = "FL3.Amean_bs") {
   if ((sum(colnames(frame) == column)) == 0) {
     if ((sum(colnames(frame) == "FL3.A_bs")) == 0) {
@@ -302,7 +318,8 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"), method = 1, col
       column <- "FL3.A_bs"
     }
   }
-
+  factors <- which(lapply(frame, class) == "factor")
+  frame[,factors] <- sapply(frame[,factors],as.character)
   if (method == 1) {
     # Default normalization method. Takes highest point in dataset grouped by 'factor_in' and sets
     # it to 1, divides all other values by that number. This method is default because it works
@@ -345,11 +362,31 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"), method = 1, col
 
   # Run the chosen estimation function and apply it
   frame <- ddply(frame, factor_in, estimate_0)
+  frame[,factors] <- apply(frame[,factors],2,as.factor)
   return(frame)
 }
 
 
-addbs <- function(frame, column = "FL3.Amean", baseline = "noYFP") {
-  frame[, paste(column, "_bs", sep = "")] <- frame[, column] - mean(subset(frame, strain == baseline)[,column])
-  return(frame)
+#' Add background subtraction to a summary data frame
+#' @description Subtracts the background fluorescence of a given control strain from the chosen column.
+#'
+#' @param flowData the summary data frame of to be background subtracted
+#' @param column the column containing the fluorescent measurement to be background subtracted
+#' @param baseline \code{character} the name of the strain representing background fluorescent values
+#'
+#' @return A summary data frame with an additional column "column_bs" containing the background subtracted fluorescent values
+#' @export
+#'
+#' @examples
+#' dat<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"),alter.names = TRUE)
+#' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
+#' annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
+#' adat <- annotateFlowSet(dat, annotation)
+#' loadGates(gatesFile = 'C6Gates.RData')
+#' dat_sum <- summarizeFlow(adat, ploidy = 'diploid', only = 'singlets',channel = 'FL1.A')
+#' dat_sum <- addbs(dat_sum, column = "FL1.Amean", baseline = "background")
+#'
+addbs <- function(flowData, column = "FL3.Amean", baseline = "noYFP") {
+  flowData[, paste(column, "_bs", sep = "")] <- flowData[, column] - mean(subset(flowData, strain == baseline)[,column])
+  return(flowData)
 }

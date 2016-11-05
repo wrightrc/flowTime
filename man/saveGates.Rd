@@ -9,9 +9,26 @@ saveGates(yeastgate = yeastGate, dipsingletgate = dipsingletGate,
   hapdoubletgate = hapdoubletGate, fileName = "defaultGates.Rdata")
 }
 \arguments{
-\item{file}{}
+\item{yeastgate}{a gate object defining the population of yeast cells}
+
+\item{dipsingletgate}{a gate object defining the population of diploid singlet cells}
+
+\item{dipdoubletgate}{a gate object defining the population of diploid doublet cells}
+
+\item{hapsingletgate}{a gate object defining the population of haploid singlet cells}
+
+\item{hapdoubletgate}{a gate object defining the population of haploid doublet cells}
+
+\item{fileName}{name of the .Rdata file you would like to save these gates within}
+}
+\value{
+a .RData file in the "extdata" folder of the package containing the specified gates
 }
 \description{
 Save a yeast gate set
+}
+\examples{
+loadGates()
+saveGates()
 }
 

@@ -2,15 +2,30 @@
 % Please edit documentation in R/summaryAnalysis.R
 \name{flsummary}
 \alias{flsummary}
-\title{Title}
+\title{Get summary statistics for fluorescence or other data channels of a flowSet}
 \usage{
-flsummary(flowset, channel = "FL3.A", moments = F, split = F,
-  transform = F)
+flsummary(flowset, channel = "FL3.A", moments = FALSE, split = FALSE,
+  transform = FALSE)
 }
 \arguments{
-\item{transform}{}
+\item{flowset}{the \code{flowSet} to create summary statistics for}
+
+\item{channel}{\code{character} the data channel to summarize}
+
+\item{moments}{\code{boolean} if \code{TRUE} then split each frame into early, middle, and late events}
+
+\item{split}{\code{boolean} split the data into four even chunks?}
+
+\item{transform}{\code{character} what transformation method was used in the summary?}
+}
+\value{
+A \code{data frame} containing summary statistics (mean, median, SD) for the specified fluorescent channel and time moments of the flowSet.
 }
 \description{
-Title
+Get summary statistics for fluorescence or other data channels of a flowSet
+}
+\examples{
+plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+flsummary(plate1)
 }
 

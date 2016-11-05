@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = T)
 library(flowTime)
 library(ggplot2)
@@ -18,7 +18,7 @@ This vignette will guide you through analysis of an example flow cytometry data 
 #Importing and annotating data
 Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
 ```{r}
-plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"),alter.names=T)
+plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"), alter.names = T)
 #add plate numbers to the sampleNames
 sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
 dat<-plate1
@@ -52,6 +52,7 @@ head(pData(adat))
 Now we can save this flowSet and anyone in perpetuity can load and analyze this annotated flowSet with ease!
 ```{r, eval = F}
 write.flowSet(adat, outdir = 'your/favorite/directory')
+# Read the flowSet with the saved experimental meta data
 read.flowSet('flowSet folder', path = 'your/flow/directory', phenoData = 'annotation.txt', alter.names = T)
 ```
 #Compiling and plotting data

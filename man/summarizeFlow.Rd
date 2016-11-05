@@ -2,25 +2,40 @@
 % Please edit documentation in R/summaryAnalysis.R
 \name{summarizeFlow}
 \alias{summarizeFlow}
-\title{summarizeFlow:
-Gates a sample to all yeast, then singlet, then doublets
-Does the work of singletsummary.cyt,doubletsummary.cyt,yeastsummary.cyt
-Also calculates singlet to doublet ratio
-Returns a list of data frames, e.g. output$singlets, output$doublets, etc.}
+\title{Generate summary statistics for a flowSet}
 \usage{
-summarizeFlow(flowset, transform = F, channel = "FL1.A", gated = F,
-  ploidy = F, moments = F, split = F, only = F)
+summarizeFlow(flowset, transform = FALSE, channel = "FL1.A",
+  gated = FALSE, ploidy = FALSE, moments = FALSE, split = FALSE,
+  only = FALSE)
 }
 \arguments{
-\item{gated}{is the data already appropriately gated?}
+\item{flowset}{the \code{flowSet} to be summarized}
 
-\item{only}{}
+\item{transform}{\code{character} the type of transformation to use, \code{FALSE} if none}
+
+\item{channel}{\code{character} which data channel should be summarized}
+
+\item{gated}{\code{boolean} is the data already appropriately gated?}
+
+\item{ploidy}{\code{character} does the flowSet contain haploid or diploid cells?}
+
+\item{moments}{\code{boolean} split the data into early, middle, and late moments?}
+
+\item{split}{\code{boolean} split the data into 4 equal parts}
+
+\item{only}{\code{character} summarize only "singlet", "doublet", or all "yeast" cells, FALSE will return all}
+}
+\value{
+\code{data frame} containing the specified summary statistics of the specified cell populations for each frame
 }
 \description{
-summarizeFlow:
-Gates a sample to all yeast, then singlet, then doublets
-Does the work of singletsummary.cyt,doubletsummary.cyt,yeastsummary.cyt
-Also calculates singlet to doublet ratio
+Gates a sample to all yeast, then singlet, then doublets.
+Also calculates singlet to doublet ratio.
 Returns a list of data frames, e.g. output$singlets, output$doublets, etc.
+}
+\examples{
+plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+summarizeFlow(plate1, transform = FALSE, channel = "FL1.A", gated = TRUE, ploidy = "diploid", moments = FALSE, only = "yeast")
+
 }
 

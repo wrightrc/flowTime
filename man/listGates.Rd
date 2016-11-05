@@ -6,7 +6,13 @@
 \usage{
 listGates()
 }
+\value{
+lists the gates files saved within the flowTime package
+}
 \description{
 List existing gate sets saved in package memory
+}
+\examples{
+listGates()
 }
 

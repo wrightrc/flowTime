@@ -1,14 +1,16 @@
 #' Quality assurance check
-#' Check whether a flowSet (or a single flowFrame) contains empty values, in which case normalization may fail (divide by zero).
-#' This is particularly useful for removing wash wells from a flowSet.
+#' @description Check whether a flowSet (or a single flowFrame) contains empty values, in which case normalization may fail (divide by zero). This is particularly useful for removing wash wells from a flowSet.
 #'
 #' @param x \code{flowSet} or \code{flowFrame} to be checked
-#' @param threshold \code{flowFrames} with counts below this threshold will be identified. Defaults to \code{100}.
+#' @param threshold \code{flowFrames} with fewer events than this threshold will be identified.
 #'
-#' @return
+#' @return A vector containing the \code{flowFrames} with fewer events than the threshold.
 #' @export
 #'
 #' @examples
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' qa.gating(plate1)
+#'
 qa.gating <- function(x, threshold = 100) {
   # Defaults to event count threshold of 100
 
@@ -39,13 +41,15 @@ qa.gating <- function(x, threshold = 100) {
 
 #' Get the time at which at flowFrame began collection
 #'
-#' @param flowframe
+#' @param flowframe The \code{flowFrame} for which you would like the initial time
 #'
-#' @return
+#' @return \code{numeric} time value in minutes
 #' @export
 #'
 #' @examples
-flowFrame.gettime <- function(flowframe) {
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"),alter.names = TRUE)
+#' get_time(plate1$A01.fcs)
+get_time <- function(flowframe) {
   time_raw <- as.numeric(unlist(strsplit(keyword(flowframe)$`$BTIM`, split = ":")))
   time <- time_raw[1] * 60 + time_raw[2] + time_raw[3]/60 + time_raw[4]/6000
   return(time)

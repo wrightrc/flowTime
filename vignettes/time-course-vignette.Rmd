@@ -54,7 +54,7 @@ Now we are ready to analyze the raw data in this `flowSet`. For this time-course
 ```{r fig.width= 7}
 #load the gate set for BD Accuri C6 cytometer
 loadGates(gatesFile = 'C6Gates.RData')
-dat_sum <- summarizeFlow(adat, ploidy = 'diploid', only = 'singlets',channel = 'FL1.A')
+dat_sum <- summarizeFlow(adat,  transform = FALSE, ploidy = 'diploid', only = 'singlets',channel = 'FL1.A')
 
 qplot(x = time, y= FL1.Amean, data = dat_sum, linetype = factor(treatment)) + geom_line() + xlab('Time post Auxin addition (min)') + ylab('Reporter Fluorescence (AU)') + scale_color_discrete(name=expression(paste("Auxin (",mu,"M)",sep = ""))) + theme_classic(base_size = 14, base_family = 'Arial')
 ```

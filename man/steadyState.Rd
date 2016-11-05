@@ -2,18 +2,31 @@
 % Please edit documentation in R/noSummaryAnalysis.R
 \name{steadyState}
 \alias{steadyState}
-\title{Find significant differences in steady state fluorescence}
+\title{Analysis of steady state fluorescence flow cytometry}
 \usage{
-steadyState(flowset, gated = F, ploidy = "diploid", only = "singlets")
+steadyState(flowset, gated = FALSE, ploidy = "diploid", only = "singlets")
 }
 \arguments{
-\item{gated}{is the data already gated?}
+\item{flowset}{your flowSet to be analyzed}
 
-\item{ploidy}{= the gate to subset your flowsets based on the ploidy of you strains and your cytometer.}
+\item{gated}{\code{boolean} is the data already gated?}
 
-\item{only=}{'yeast', 'singlets', or 'doublets'}
+\item{ploidy}{\code{character} gate to subset your flowset based on the ploidy of you strains}
+
+\item{only}{\code{character} which population of events to analyze, 'yeast', 'singlets', or 'doublets'?}
+}
+\value{
+a data frame containing all of the selected subset of events from the original flowSet
 }
 \description{
-Compares several replicates of strain-treatment combinations for statistically significant differences in steady-state fluorescence
+Generates a data frame which can be used to visualize and analyze steady state flow cytometry data. Steady state in this case means that
+}
+\examples{
+dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
+loadGates(gatesFile = 'SORPGates.RData')
+steadyState(dat, gated = FALSE, ploidy = "diploid", only = "singlets")
+
 }
 
