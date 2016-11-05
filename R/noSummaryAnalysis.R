@@ -6,7 +6,7 @@
 #' @return annotation_df a data frame containing the sample names of your flow set
 #' @export
 #'
-#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' annotation <- createAnnotation(yourFlowSet = dat)
 #' head(annotation)
 createAnnotation <- function(yourFlowSet) {
@@ -23,7 +23,7 @@ createAnnotation <- function(yourFlowSet) {
 #' @return An annotated flowSet
 #' @export
 #'
-#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
 #' annotateFlowSet(dat, annotation, mergeBy = "name")
 #'
@@ -58,7 +58,7 @@ annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
 #' @return a data frame containing all of the selected subset of events from the original flowSet
 #' @export
 #' @examples
-#' dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
 #' dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
 #' loadGates(gatesFile = 'SORPGates.RData')

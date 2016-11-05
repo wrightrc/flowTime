@@ -7,7 +7,7 @@
 #' @return a flowSet with FL1.A values normalized by FSC.A values
 #' @export
 #'
-#' @examples plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"),alter.names = TRUE)
+#' @examples plate1<-read.flowSet(path=system.file("extdata", "ss_example", package = "flowTime"),alter.names = TRUE)
 #' fl1transform(plate1)
 fl1transform <- function(x, transform = FALSE) {
   # Default scaling is 10^4 and is solely for making results human-readable
@@ -73,7 +73,7 @@ fl1transform <- function(x, transform = FALSE) {
 #' @return A \code{data frame} containing summary statistics (mean, median, SD) for the specified fluorescent channel and time moments of the flowSet.
 #' @export
 #'
-#' @examples plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' @examples plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' flsummary(plate1)
 flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE, transform = FALSE) {
   # Number of cells (experiments) in the flowSet
@@ -160,7 +160,7 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE, split = FALSE
 #' @return the full \code{data frame} with renamed columns
 #' @export
 #'
-#' @examples plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names= TRUE)
+#' @examples plate1 <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names= TRUE)
 #' flsummary(plate1, )
 #' renameflcols(plate1, channel = "FL3.A", transform = FALSE)
 #'
@@ -204,7 +204,7 @@ renameflcols <- function(x, channel = "FL1.A", transform = FALSE) {
 #' @export
 #'
 #' @examples
-#' plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' plate1 <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' summarizeFlow(plate1, transform = FALSE, channel = "FL1.A", gated = TRUE, ploidy = "diploid", moments = FALSE, only = "yeast")
 #'
 summarizeFlow <- function(flowset, transform = FALSE, channel = "FL1.A", gated = FALSE, ploidy = FALSE, moments = FALSE, split = FALSE, only = FALSE) {
@@ -303,7 +303,7 @@ summarizeFlow <- function(flowset, transform = FALSE, channel = "FL1.A", gated =
 #' @export
 #'
 #' @examples
-#' dat <- read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"), alter.names = TRUE)
+#' dat <- read.flowSet(path=system.file("extdata", "tc_example", package = "flowTime"), alter.names = TRUE)
 #' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 #' adat <- annotateFlowSet(dat, annotation)
 #' loadGates(gatesFile = 'C6Gates.RData')
@@ -378,7 +378,7 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"), method = 1, col
 #' @export
 #'
 #' @examples
-#' dat<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"),alter.names = TRUE)
+#' dat<-read.flowSet(path=system.file("extdata", "tc_example", package = "flowTime"),alter.names = TRUE)
 #' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 #' annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
 #' adat <- annotateFlowSet(dat, annotation)

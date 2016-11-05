@@ -18,13 +18,13 @@ This vignette will guide you through analysis of an example flow cytometry data 
 #Importing and annotating data
 Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
 ```{r}
-plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"), alter.names = T)
+plate1<-read.flowSet(path=system.file("extdata", "ss_example", package = "flowTime"), alter.names = T)
 #add plate numbers to the sampleNames
 sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
 dat<-plate1
 ```
 If you have several plates this code can be repeated and each plate can be combined to assemble the full data set.
-```{r eval = F}
+```{r, eval = F}
 plate2<-read.flowSet(path=paste(experiment,"_2/",sep=""),alter.names=T)
 sampleNames(plate2)<-paste("2_",sampleNames(plate2),sep="")
 dat<-rbind2(plate1,plate2)
@@ -37,7 +37,7 @@ sampleNames(dat)
 sampleNames(dat) == annotation$name 
 ```
 We can also create this column from our data set and attach the annotation columns. Alternatively one can use the `createAnnotation` function to create a data frame with the appropriate `name` column that can then be filled in via R-code or saved as a csv file and filled via a spreadsheet editor. The order of the entries in `annotation` does not matter, so long as each entry in `sampleNames(dat)` is represented. The `annotateFlowSet` function will match entries by the `mergeBy` column  
-```{r eval = F}
+```{r, eval = F}
 annotation <- cbind(annotation, 'name' =  sampleNames(dat)) 
 # or
 annotation <- createAnnotation(yourFlowSet = dat)
@@ -58,7 +58,7 @@ read.flowSet('flowSet folder', path = 'your/flow/directory', phenoData = 'annota
 ```
 #Compiling and plotting data
 Now we are ready to analyze the raw data in this `flowSet`. First we load the set of gates that will be used to subset our data. To analyze this steady-state or single time point experiment we will use the `steadyState` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of the relevant data and metadata for each event. This `dataframe` can then be used to visualize the full data set. 
-```{r fig.width = 4, fig.height = 4}
+```{r, fig.width = 4, fig.height = 4}
 loadGates(gatesFile = 'SORPGates.RData')
 dat.SS <- steadyState(flowset = adat, ploidy = 'diploid', only = 'singlets')
 

@@ -16,7 +16,7 @@ annotation_df a data frame containing the sample names of your flow set
 Creates a data frame with rows containing the sample names of your flow set that can then be filled in with experimental metadata.
 }
 \examples{
-dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 annotation <- createAnnotation(yourFlowSet = dat)
 head(annotation)
 }

@@ -20,7 +20,7 @@ A summary data frame with an additional column "column_bs" containing the backgr
 Subtracts the background fluorescence of a given control strain from the chosen column.
 }
 \examples{
-dat<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"),alter.names = TRUE)
+dat<-read.flowSet(path=system.file("extdata", "tc_example", package = "flowTime"),alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
 adat <- annotateFlowSet(dat, annotation)

@@ -16,7 +16,7 @@ ploidy(flowframe)
 Use the FSC.A/FSC.H ratio. Diploids are typically 5um x 6um ellipsoids while haploids are typically 4um x 4um spheroids. As a result, diploids are longer and you get a larger 'area/volume' FSC.A. 'Width' might also be useful on certain cytometers.
 }
 \examples{
-dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 ploidy(dat$A01.fcs)
 
 }

@@ -18,7 +18,7 @@ a flowSet with FL1.A values normalized by FSC.A values
 Should control for (at least some) non-linearity in the values Also makes FL1.A proportional to fluorescence/cell volume Used to multiply by the mean FSC.A value, but this is probably statistically questionable. Now multiplies by a constant (10000) simply to keep the values in the integer range.  If you specify transform='log', it will simply do a log transform to FL1.A instead.
 }
 \examples{
-plate1<-read.flowSet(path=system.file("extdata", "ss_example/", package = "flowTime"),alter.names = TRUE)
+plate1<-read.flowSet(path=system.file("extdata", "ss_example", package = "flowTime"),alter.names = TRUE)
 fl1transform(plate1)
 }
 

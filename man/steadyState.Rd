@@ -22,7 +22,7 @@ a data frame containing all of the selected subset of events from the original f
 Generates a data frame which can be used to visualize and analyze steady state flow cytometry data. Steady state in this case means that
 }
 \examples{
-dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
 dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
 loadGates(gatesFile = 'SORPGates.RData')

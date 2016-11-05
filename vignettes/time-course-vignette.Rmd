@@ -17,7 +17,7 @@ This vignette will guide you through analysis of an example flow cytometry data 
 #Importing and annotating data
 Import your flow cytometry data using `read.flowset`. Here, we will import an example flowSet.
 ```{r}
-plate1<-read.flowSet(path=system.file("extdata", "tc_example/", package = "flowTime"),alter.names=T)
+plate1<-read.flowSet(path=system.file("extdata", "tc_example", package = "flowTime"),alter.names=T)
 #add plate numbers to the sampleNames, in this example we have already done this step
 #sampleNames(plate1)<-paste("1_",sampleNames(plate1),sep="")
 dat<-plate1

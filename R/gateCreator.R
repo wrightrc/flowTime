@@ -14,8 +14,7 @@
 #' saveGates()
 saveGates <- function(yeastgate = yeastGate, dipsingletgate = dipsingletGate, dipdoubletgate = dipdoubletGate,
                       hapsingletgate = hapsingletGate, hapdoubletgate = hapdoubletGate, fileName = "defaultGates.Rdata") {
-  save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = paste0(system.file("extdata/Gates/",
-                                                                                                            package = "flowTime"), fileName))
+  save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate, hapdoubletGate, file = system.file("extdata", "Gates", fileName, package = "flowTime"))
 }
 
 #' List existing gate sets saved in package memory
@@ -25,7 +24,7 @@ saveGates <- function(yeastgate = yeastGate, dipsingletgate = dipsingletGate, di
 #'
 #' @examples listGates()
 listGates <- function(){
-  list.files(system.file("extdata/Gates/", package = "flowTime"))
+  list.files(system.file("extdata", "Gates", package = "flowTime"))
 }
 
 #' Create a polygon gate
@@ -57,7 +56,7 @@ polygate <- function(x, y, filterID = "newGate", channels = c("FSC.A", "FSC.H"))
 #' @return "Diploid" or "Haploid" and the mean FSC.A/FSC.H quotient
 #' @export
 #'
-#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' @examples dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' ploidy(dat$A01.fcs)
 #'
 ploidy <- function(flowframe) {
@@ -84,7 +83,7 @@ ploidy <- function(flowframe) {
 #' loadGates("defaultGates.RData")
 #' setGates("defaultGates.RData")
 setGates <- function(gatesFile = "defaultGates.RData") {
-  load(paste0(system.file("extdata/Gates/", package = "flowTime"), gatesFile))
+  load((system.file("extdata", "Gates", gatesFile, package = "flowTime")))
   saveGates(fileName = "defaultGates.RData")
 }
 
@@ -97,5 +96,5 @@ setGates <- function(gatesFile = "defaultGates.RData") {
 #'
 #' @examples loadGates()
 loadGates <- function(gatesFile = "defaultGates.RData") {
-  load(paste0(system.file("extdata/Gates/", package = "flowTime"), gatesFile), envir = globalenv())
+  load(system.file("extdata", "Gates", gatesFile, package = "flowTime"), envir = globalenv())
 }

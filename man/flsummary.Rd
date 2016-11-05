@@ -25,7 +25,7 @@ A \code{data frame} containing summary statistics (mean, median, SD) for the spe
 Get summary statistics for fluorescence or other data channels of a flowSet
 }
 \examples{
-plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 flsummary(plate1)
 }
 

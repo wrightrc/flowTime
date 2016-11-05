@@ -34,7 +34,7 @@ Also calculates singlet to doublet ratio.
 Returns a list of data frames, e.g. output$singlets, output$doublets, etc.
 }
 \examples{
-plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+plate1 <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 summarizeFlow(plate1, transform = FALSE, channel = "FL1.A", gated = TRUE, ploidy = "diploid", moments = FALSE, only = "yeast")
 
 }

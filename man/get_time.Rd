@@ -16,7 +16,7 @@ get_time(flowframe)
 Get the time at which at flowFrame began collection
 }
 \examples{
-plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"),alter.names = TRUE)
+plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"),alter.names = TRUE)
 get_time(plate1$A01.fcs)
 }
 

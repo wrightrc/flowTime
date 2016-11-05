@@ -20,7 +20,7 @@ the full \code{data frame} with renamed columns
 Rename flsummary data
 }
 \examples{
-plate1 <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names= TRUE)
+plate1 <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names= TRUE)
 flsummary(plate1, )
 renameflcols(plate1, channel = "FL3.A", transform = FALSE)
 

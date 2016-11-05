@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-#' plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 #' qa.gating(plate1)
 #'
 qa.gating <- function(x, threshold = 100) {
@@ -47,7 +47,7 @@ qa.gating <- function(x, threshold = 100) {
 #' @export
 #'
 #' @examples
-#' plate1<-read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"),alter.names = TRUE)
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"),alter.names = TRUE)
 #' get_time(plate1$A01.fcs)
 get_time <- function(flowframe) {
   time_raw <- as.numeric(unlist(strsplit(keyword(flowframe)$`$BTIM`, split = ":")))

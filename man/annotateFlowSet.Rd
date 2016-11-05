@@ -20,7 +20,7 @@ An annotated flowSet
 Add annotations to a flowSets phenoData and plate numbers, strain names, and treatment also set T0
 }
 \examples{
-dat <- read.flowSet(path = system.file("extdata", "ss_example/", package = "flowTime"), alter.names = TRUE)
+dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
 annotateFlowSet(dat, annotation, mergeBy = "name")
 
