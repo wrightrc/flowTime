@@ -52,6 +52,7 @@ head(pData(adat))
 Now we can save this flowSet and anyone in perpetuity can load and analyze this annotated flowSet with ease!
 ```{r, eval = F}
 write.flowSet(adat, outdir = 'your/favorite/directory')
+
 # Read the flowSet with the saved experimental meta data
 read.flowSet('flowSet folder', path = 'your/flow/directory', phenoData = 'annotation.txt', alter.names = T)
 ```
