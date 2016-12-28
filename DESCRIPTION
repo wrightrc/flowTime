@@ -1,6 +1,6 @@
 Package: flowTime
 Title: Annotation and analysis of biological dynamical systems using flow cytometry
-Version: 0.99.2
+Version: 0.99.3
 Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", 
     role = c("aut", "cre")), person("Nick", "Bolten", 
     email = "nbolten@gmail.com", role = c("aut")), 
