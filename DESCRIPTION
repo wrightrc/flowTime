@@ -1,6 +1,6 @@
 Package: flowTime
 Title: Annotation and analysis of biological dynamical systems using flow cytometry
-Version: 0.99.2
+Version: 0.99.1
 Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", 
     role = c("aut", "cre")), person("Nick", "Bolten", 
     email = "nbolten@gmail.com", role = c("aut")), 
@@ -26,7 +26,6 @@ Description: This package was developed for analysis of both dynamic and steady
 Depends: R (>= 3.3),
     flowCore,
     plyr
-Imports: stats
 License: Artistic-2.0
 LazyData: true
 biocViews:
@@ -41,6 +40,7 @@ Suggests:
     flowViz,
     ggplot2,
     BiocGenerics,
-    moments
+    moments,
+    stats
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

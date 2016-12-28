@@ -3,6 +3,9 @@
 #' This environment will allow the gates to be accessible throughout the package and prevent
 #' interference with the global environment.
 #' @export
+#' @return gate environment
+#' @examples loadGates()
+#' ls(gateEnv)
 gateEnv <- new.env()
 load(system.file('extdata', 'Gates', 'defaultGates.Rdata', package = 'flowTime'), envir = gateEnv)
 
@@ -17,6 +20,9 @@ load(system.file('extdata', 'Gates', 'defaultGates.Rdata', package = 'flowTime')
 #'   2000000 500000
 #' @format formal class polygonGate
 #' @export
+#' @return yeast gate
+#' @examples loadGates()
+#' show(yeastGate)
 yeastGate <- base::get(x = 'yeastGate', envir = gateEnv)
 
 #' A gate for the set of all diploid singlet yeast cells
@@ -24,31 +30,38 @@ yeastGate <- base::get(x = 'yeastGate', envir = gateEnv)
 #' Typically set in FSC.A by FSC.H space
 #' Diploids are typically 5um x 6um ellipsoids while haploids are typically
 #' 4um x 4um spheroids. As a result, diploids are longer and you get a
-#' larger 'area/volume' FSC.A
-#'     FSC.A   FSC.H
-#'     80000   80000
-#'     70000  100000
-#'    800000 1000000
-#'   1250000 1250000
-#'   1000000 1000000
+#' larger 'area/volume'.
+#'
 #' @format formal class polygonGate
 #' @export
-dipsingletGate <- base::get(x = 'hapsingletGate', envir = gateEnv)
+#' @return diploid singlet gate
+#' @examples loadGates()
+#' dipsingletGate
+dipsingletGate <- base::get(x = 'dipsingletGate', envir = gateEnv)
 
 #' A gate for the set of all diploid doublets
 #'
 #' @format formal class polygonGate
 #' @export
-dipdoubletGate <- base::get(x = 'hapdoubletGate', envir = gateEnv)
+#' @return diploid doublet gate
+#' @examples loadGates()
+#' dipdoubletGate
+dipdoubletGate <- base::get(x = 'dipdoubletGate', envir = gateEnv)
 
 #' A gate for the set of all haploid singlets
 #' @format formal class polygonGate
 #' @export
+#' @return haploid singlet gate
+#' @examples loadGates()
+#' hapsingletGate
 hapsingletGate <- base::get(x = 'hapsingletGate', envir = gateEnv)
 
 #' A gate for the set of all haploid doublets
 #' @format formal class polygonGate
 #' @export
+#' @return haploid doublet gate
+#' @examples loadGates()
+#' hapdoubletGate
 hapdoubletGate <- base::get(x = 'hapdoubletGate', envir = gateEnv)
 
 

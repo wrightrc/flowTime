@@ -8,8 +8,15 @@
 \usage{
 hapdoubletGate
 }
+\value{
+haploid doublet gate
+}
 \description{
 A gate for the set of all haploid doublets
+}
+\examples{
+loadGates()
+hapdoubletGate
 }
 \keyword{datasets}
 

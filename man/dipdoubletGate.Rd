@@ -8,8 +8,15 @@
 \usage{
 dipdoubletGate
 }
+\value{
+diploid doublet gate
+}
 \description{
 A gate for the set of all diploid doublets
+}
+\examples{
+loadGates()
+dipdoubletGate
 }
 \keyword{datasets}
 

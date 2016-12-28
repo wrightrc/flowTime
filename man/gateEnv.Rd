@@ -8,9 +8,16 @@
 \usage{
 gateEnv
 }
+\value{
+gate environment
+}
 \description{
 This environment will allow the gates to be accessible throughout the package and prevent
 interference with the global environment.
+}
+\examples{
+loadGates()
+ls(gateEnv)
 }
 \keyword{datasets}
 

@@ -10,6 +10,9 @@ yeastGate
 
 yeastGate
 }
+\value{
+yeast gate
+}
 \description{
 Typically set in FSC.A by SSC.A space to exclued any debris
     FSC.A  SSC.A
@@ -26,6 +29,10 @@ Typically set in FSC.A by SSC.A space to exclued any debris
     40000  80000
   1250000 600000
   2000000 500000
+}
+\examples{
+loadGates()
+show(yeastGate)
 }
 \keyword{datasets}
 

@@ -3,6 +3,7 @@
 #'
 #' @import plyr
 #' @import flowCore
+#'
 #' @param flowset the \code{flowSet} to create summary statistics for
 #' @param channel \code{character} the data channel to summarize
 #' @param moments \code{boolean} if \code{TRUE} then split each frame into

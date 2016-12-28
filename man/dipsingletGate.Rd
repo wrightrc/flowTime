@@ -10,6 +10,9 @@ dipsingletGate
 
 dipsingletGate
 }
+\value{
+diploid singlet gate
+}
 \description{
 Typically set in FSC.A by FSC.H space
 Diploids are typically 5um x 6um ellipsoids while haploids are typically
@@ -25,13 +28,11 @@ larger 'area/volume' FSC.A
 Typically set in FSC.A by FSC.H space
 Diploids are typically 5um x 6um ellipsoids while haploids are typically
 4um x 4um spheroids. As a result, diploids are longer and you get a
-larger 'area/volume' FSC.A
-    FSC.A   FSC.H
-    80000   80000
-    70000  100000
-   800000 1000000
-  1250000 1250000
-  1000000 1000000
+larger 'area/volume'.
+}
+\examples{
+loadGates()
+dipsingletGate
 }
 \keyword{datasets}
 
