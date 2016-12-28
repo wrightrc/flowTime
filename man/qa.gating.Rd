@@ -9,16 +9,21 @@ qa.gating(x, threshold = 100)
 \arguments{
 \item{x}{\code{flowSet} or \code{flowFrame} to be checked}
 
-\item{threshold}{\code{flowFrames} with fewer events than this threshold will be identified.}
+\item{threshold}{\code{flowFrames} with fewer events than this threshold
+will be identified.}
 }
 \value{
-A vector containing the \code{flowFrames} with fewer events than the threshold.
+A vector containing the \code{flowFrames} with fewer events than
+the threshold.
 }
 \description{
-Check whether a flowSet (or a single flowFrame) contains empty values, in which case normalization may fail (divide by zero). This is particularly useful for removing wash wells from a flowSet.
+Check whether a flowSet (or a single flowFrame) contains empty
+values, in which case normalization may fail (divide by zero). This is
+particularly useful for removing wash wells from a flowSet.
 }
 \examples{
-plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
+plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
+"flowTime"), alter.names = TRUE)
 qa.gating(plate1)
 
 }

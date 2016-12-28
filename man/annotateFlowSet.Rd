@@ -7,9 +7,13 @@
 annotateFlowSet(yourFlowSet, annotation_df, mergeBy = "name")
 }
 \arguments{
-\item{yourFlowSet}{a flowSet with sampleNames of the format 'plate#_Well', we typically use the following code chunk to read data from individual plates as exported from BD Accuri C6 software.d}
+\item{yourFlowSet}{a flowSet with sampleNames of the format 'plate#_Well',
+we typically use the following code chunk to read data from individual
+plates as exported from BD Accuri C6 software.}
 
-\item{annotation_df}{A data frame with columns 'well', 'strain', 'treatment', containing all of the wells in the flowset labeled with the strain and treatment in that well.}
+\item{annotation_df}{A data frame with columns 'well', 'strain',
+'treatment', containing all of the wells in the flowset labeled with the
+strain and treatment in that well.}
 
 \item{mergeBy}{the unique identifier column}
 }
@@ -17,11 +21,14 @@ annotateFlowSet(yourFlowSet, annotation_df, mergeBy = "name")
 An annotated flowSet
 }
 \description{
-Add annotations to a flowSets phenoData and plate numbers, strain names, and treatment also set T0
+Add annotations to a flowSets phenoData and plate numbers,
+strain names, and treatment also set T0
 }
 \examples{
-dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
-annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+dat <- read.flowSet(path = system.file("extdata", "ss_example",
+package = "flowTime"), alter.names = TRUE)
+annotation <- read.csv(system.file("extdata", "ss_example.csv", package =
+"flowTime"))
 annotateFlowSet(dat, annotation, mergeBy = "name")
 
 }

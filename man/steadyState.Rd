@@ -11,19 +11,26 @@ steadyState(flowset, gated = FALSE, ploidy = "diploid", only = "singlets")
 
 \item{gated}{\code{boolean} is the data already gated?}
 
-\item{ploidy}{\code{character} gate to subset your flowset based on the ploidy of you strains}
+\item{ploidy}{\code{character} gate to subset your flowset based on the
+ploidy of you strains}
 
-\item{only}{\code{character} which population of events to analyze, 'yeast', 'singlets', or 'doublets'?}
+\item{only}{\code{character} which population of events to analyze,
+'yeast', singlets', or 'doublets'?}
 }
 \value{
-a data frame containing all of the selected subset of events from the original flowSet
+a data frame containing all of the selected subset of events from
+the original flowSet
 }
 \description{
-Generates a data frame which can be used to visualize and analyze steady state flow cytometry data. Steady state in this case means that
+Generates a data frame which can be used to visualize and
+analyze steady state flow cytometry data. Steady state in this case means
+that
 }
 \examples{
-dat <- read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
-annotation <- read.csv(system.file("extdata", "ss_example.csv", package = "flowTime"))
+dat <- read.flowSet(path = system.file("extdata", "ss_example",
+package = "flowTime"), alter.names = TRUE)
+annotation <- read.csv(system.file("extdata", "ss_example.csv",
+package = "flowTime"))
 dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
 loadGates(gatesFile = 'SORPGates.RData')
 steadyState(dat, gated = FALSE, ploidy = "diploid", only = "singlets")

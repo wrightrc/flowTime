@@ -7,13 +7,16 @@
 setGates(gatesFile = "defaultGates.RData")
 }
 \arguments{
-\item{gatesFile}{the full name of the gates file you would like to set as default (e.g. 'C6Gates.RData')}
+\item{gatesFile}{the full name of the gates file you would like to set as
+default (e.g. 'C6Gates.RData')}
 }
 \value{
-overwrites the defaultGates.RData file with the specified gates file
+overwrites the defaultGates.RData file with the specified gates
+file
 }
 \description{
-Sets specified file to default gates for use in other functions
+Sets specified file to default gates for use in other
+functions
 }
 \examples{
 loadGates("defaultGates.RData")

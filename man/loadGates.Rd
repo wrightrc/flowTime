@@ -13,7 +13,8 @@ loadGates(gatesFile = "defaultGates.RData")
 gate objects created in the current environment
 }
 \description{
-Loads a set of yeast gates into active memory to be used in analysis functions
+Loads a set of yeast gates into active memory to be used in
+analysis functions
 }
 \examples{
 loadGates()

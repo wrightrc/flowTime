@@ -13,7 +13,8 @@ polygate(x, y, filterID = "newGate", channels = c("FSC.A", "FSC.H"))
 
 \item{filterID}{name of the gate}
 
-\item{channels}{vector containing the channels matching the x and y coordinates above}
+\item{channels}{vector containing the channels matching the x and y
+coordinates above}
 }
 \value{
 a polygon gate object

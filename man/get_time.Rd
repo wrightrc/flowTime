@@ -7,7 +7,8 @@
 get_time(flowframe)
 }
 \arguments{
-\item{flowframe}{The \code{flowFrame} for which you would like the initial time}
+\item{flowframe}{The \code{flowFrame} for which you would like the initial
+time}
 }
 \value{
 \code{numeric} time value in minutes
@@ -16,7 +17,8 @@ get_time(flowframe)
 Get the time at which at flowFrame began collection
 }
 \examples{
-plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"),alter.names = TRUE)
+plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
+"flowTime"),alter.names = TRUE)
 get_time(plate1$A01.fcs)
 }
 

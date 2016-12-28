@@ -1,14 +1,19 @@
 #' Quality assurance check
-#' @description Check whether a flowSet (or a single flowFrame) contains empty values, in which case normalization may fail (divide by zero). This is particularly useful for removing wash wells from a flowSet.
+#' @description Check whether a flowSet (or a single flowFrame) contains empty
+#' values, in which case normalization may fail (divide by zero). This is
+#' particularly useful for removing wash wells from a flowSet.
 #'
 #' @param x \code{flowSet} or \code{flowFrame} to be checked
-#' @param threshold \code{flowFrames} with fewer events than this threshold will be identified.
+#' @param threshold \code{flowFrames} with fewer events than this threshold
+#' will be identified.
 #'
-#' @return A vector containing the \code{flowFrames} with fewer events than the threshold.
+#' @return A vector containing the \code{flowFrames} with fewer events than
+#' the threshold.
 #' @export
 #'
 #' @examples
-#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"), alter.names = TRUE)
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
+#' "flowTime"), alter.names = TRUE)
 #' qa.gating(plate1)
 #'
 qa.gating <- function(x, threshold = 100) {
@@ -26,7 +31,8 @@ qa.gating <- function(x, threshold = 100) {
 
   # Find all counts less than 100 (now it's a boolean vector)
   counts.boolean <- counts < threshold
-  counts.failed.position <- grep(TRUE, counts.boolean)  #positions of those that failed
+  #positions of those that failed
+  counts.failed.position <- grep(TRUE, counts.boolean)
 
   # Did we get any failed counts?  If so, return the position
   counts.failed <- length(counts.failed.position) != 0
@@ -41,16 +47,19 @@ qa.gating <- function(x, threshold = 100) {
 
 #' Get the time at which at flowFrame began collection
 #'
-#' @param flowframe The \code{flowFrame} for which you would like the initial time
+#' @param flowframe The \code{flowFrame} for which you would like the initial
+#' time
 #'
 #' @return \code{numeric} time value in minutes
 #' @export
 #'
 #' @examples
-#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package = "flowTime"),alter.names = TRUE)
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
+#' "flowTime"),alter.names = TRUE)
 #' get_time(plate1$A01.fcs)
 get_time <- function(flowframe) {
-  time_raw <- as.numeric(unlist(strsplit(keyword(flowframe)$`$BTIM`, split = ":")))
+  time_raw <- as.numeric(unlist(strsplit(keyword(flowframe)$`$BTIM`,
+                                         split = ":")))
   time <- time_raw[1] * 60 + time_raw[2] + time_raw[3]/60 + time_raw[4]/6000
   return(time)
 }

@@ -4,25 +4,31 @@
 \alias{saveGates}
 \title{Save a yeast gate set}
 \usage{
-saveGates(yeastgate = yeastGate, dipsingletgate = dipsingletGate,
-  dipdoubletgate = dipdoubletGate, hapsingletgate = hapsingletGate,
-  hapdoubletgate = hapdoubletGate, fileName = "defaultGates.RData")
+saveGates(yeastGate = "yeastGate", dipsingletGate = "dipsingletGate",
+  dipdoubletGate = "dipdoubletGate", hapsingletGate = "hapsingletGate",
+  hapdoubletGate = "hapdoubletGate", fileName = "defaultGates.RData")
 }
 \arguments{
-\item{yeastgate}{a gate object defining the population of yeast cells}
+\item{yeastGate}{a gate object defining the population of yeast cells}
 
-\item{dipsingletgate}{a gate object defining the population of diploid singlet cells}
+\item{dipsingletGate}{a gate object defining the population of diploid
+singlet cells}
 
-\item{dipdoubletgate}{a gate object defining the population of diploid doublet cells}
+\item{dipdoubletGate}{a gate object defining the population of diploid
+doublet cells}
 
-\item{hapsingletgate}{a gate object defining the population of haploid singlet cells}
+\item{hapsingletGate}{a gate object defining the population of haploid
+singlet cells}
 
-\item{hapdoubletgate}{a gate object defining the population of haploid doublet cells}
+\item{hapdoubletGate}{a gate object defining the population of haploid
+doublet cells}
 
-\item{fileName}{name of the .Rdata file you would like to save these gates within}
+\item{fileName}{name of the .Rdata file you would like to save these gates
+within}
 }
 \value{
-a .RData file in the "extdata" folder of the package containing the specified gates
+a .RData file in the "extdata" folder of the package containing the
+specified gates
 }
 \description{
 Save a yeast gate set
