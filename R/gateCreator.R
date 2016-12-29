@@ -7,7 +7,8 @@
 #' @examples loadGates()
 #' ls(gateEnv)
 gateEnv <- new.env()
-load(system.file('extdata', 'Gates', 'defaultGates.Rdata', package = 'flowTime'), envir = gateEnv)
+load(system.file('extdata', 'Gates', 'defaultGates.RData',
+                 package = 'flowTime'), envir = gateEnv)
 
 #' A gate for the set of all yeast cells
 #'
@@ -77,11 +78,11 @@ hapdoubletGate <- base::get(x = 'hapdoubletGate', envir = gateEnv)
 #' singlet cells
 #' @param hapdoubletGate a gate object defining the population of haploid
 #' doublet cells
-#' @param fileName name of the .Rdata file you would like to save these gates
-#' within
+#' @param fileName name of the .Rdata file you would like to save these
+#' gates within
 #'
-#' @return a .RData file in the "extdata" folder of the package containing the
-#' specified gates
+#' @return a .RData file in the "extdata" folder of the package containing
+#' the specified gates
 #' @export
 #'
 #' @examples
