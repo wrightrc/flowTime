@@ -14,9 +14,9 @@
 #' @examples
 #' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
 #' "flowTime"), alter.names = TRUE)
-#' qa.gating(plate1)
+#' qaGating(plate1)
 #'
-qa.gating <- function(x, threshold = 100) {
+qaGating <- function(x, threshold = 100) {
   # Defaults to event count threshold of 100
 
   print("Running QA...")
@@ -56,8 +56,8 @@ qa.gating <- function(x, threshold = 100) {
 #' @examples
 #' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
 #' "flowTime"),alter.names = TRUE)
-#' get_time(plate1$A01.fcs)
-get_time <- function(flowframe) {
+#' getTime(plate1$A01.fcs)
+getTime <- function(flowframe) {
   time_raw <- as.numeric(unlist(strsplit(keyword(flowframe)$`$BTIM`,
                                          split = ":")))
   time <- time_raw[1] * 60 + time_raw[2] + time_raw[3]/60 + time_raw[4]/6000

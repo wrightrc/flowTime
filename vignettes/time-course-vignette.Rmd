@@ -62,7 +62,7 @@ read.flowSet('flowSet folder', path = 'your/flow/directory',
 Now we are ready to analyze the raw data in this `flowSet`. For this time-course experiment we will use the `summarizeFlow` function. This function will gate each `flowFrame` in the `flowSet` and compile and return a `dataframe` of summary statistics for the specified channel each `flowFrame`. This `dataframe` can then be used to visualize the full data set. 
 ```{r, fig.width= 7}
 #load the gate set for BD Accuri C6 cytometer
-loadGates(gatesFile = 'C6Gates.RData')
+loadGates(gatesFile = 'C6Gates.Rdata', path = system.file("extdata", package = "flowTime"))
 dat_sum <- summarizeFlow(adat, ploidy = 'diploid', 
                          only = 'singlets',channel = 'FL1.A')
 

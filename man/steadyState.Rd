@@ -32,7 +32,7 @@ package = "flowTime"), alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "ss_example.csv",
 package = "flowTime"))
 dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
-loadGates(gatesFile = 'SORPGates.RData')
+loadGates(gatesFile = 'SORPGates')
 steadyState(dat, gated = FALSE, ploidy = "diploid", only = "singlets")
 
 }

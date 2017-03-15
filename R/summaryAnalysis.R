@@ -120,7 +120,13 @@ summarizeFlow <- function(flowset, channel = "FL1.A", gated = FALSE,
                           ploidy = FALSE, moments = FALSE, only = FALSE) {
 
   if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-               "dipsingletGate", "dipdoubletGate"), envir = gateEnv)) loadGates()
+               "dipsingletGate", "dipdoubletGate"))) loadGates()
+  yeastGate <- get("yeastGate")
+  hapsingletGate <- get("hapsingletGate")
+  hapdoubletGate <- get("hapdoubletGate")
+  dipsingletGate <- get("dipsingletGate")
+  dipdoubletGate <- get("dipdoubletGate")
+
   # Number of experiments
   n_experiments <- length(flowset)
 
@@ -133,18 +139,18 @@ summarizeFlow <- function(flowset, channel = "FL1.A", gated = FALSE,
   }
   else {
     if (!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-                  "dipsingletGate", "dipdoubletGate"), envir = gateEnv))
+                  "dipsingletGate", "dipdoubletGate")))
       loadGates()
     if (ploidy == "haploid") {
       print("Gating with haploid gates...")
-      yeast <- Subset(flowset, flowTime::yeastGate)
-      singlets <- Subset(yeast, flowTime::hapsingletGate)
-      doublets <- Subset(yeast, flowTime::hapdoubletGate)
+      yeast <- Subset(flowset, yeastGate)
+      singlets <- Subset(yeast, hapsingletGate)
+      doublets <- Subset(yeast, hapdoubletGate)
     } else if (ploidy == "diploid") {
       print("Gating with diploid gates...")
-      yeast <- Subset(flowset, flowTime::yeastGate)
-      singlets <- Subset(yeast, flowTime::dipsingletGate)
-      doublets <- Subset(yeast, flowTime::dipdoubletGate)
+      yeast <- Subset(flowset, yeastGate)
+      singlets <- Subset(yeast, dipsingletGate)
+      doublets <- Subset(yeast, dipdoubletGate)
     } else {
       stop("Error: You must define ploidy=\"haploid\" or ploidy=\"diploid\"")
     }
@@ -221,7 +227,7 @@ summarizeFlow <- function(flowset, channel = "FL1.A", gated = FALSE,
 #' annotation <- read.csv(system.file("extdata", "tc_example.csv",
 #' package = "flowTime"))
 #' adat <- annotateFlowSet(dat, annotation)
-#' loadGates(gatesFile = 'C6Gates.RData')
+#' loadGates(gatesFile = 'C6Gates')
 #' dat_sum <- summarizeFlow(adat, ploidy = "diploid", only = "singlets",
 #' channel = "FL1.A")
 #' dat_sum <- addnorm(dat_sum, c("strain", "treatment"), method = 1,
@@ -318,7 +324,7 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 #' package = "flowTime"))
 #' annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
 #' adat <- annotateFlowSet(dat, annotation)
-#' loadGates(gatesFile = 'C6Gates.RData')
+#' loadGates(gatesFile = 'C6Gates')
 #' dat_sum <- summarizeFlow(adat, ploidy = 'diploid', only = 'singlets',
 #' channel = 'FL1.A')
 #' dat_sum <- addbs(dat_sum, column = "FL1.Amean", baseline = "background")

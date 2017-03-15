@@ -43,7 +43,7 @@ package = "flowTime"), alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "tc_example.csv",
 package = "flowTime"))
 adat <- annotateFlowSet(dat, annotation)
-loadGates(gatesFile = 'C6Gates.RData')
+loadGates(gatesFile = 'C6Gates')
 dat_sum <- summarizeFlow(adat, ploidy = "diploid", only = "singlets",
 channel = "FL1.A")
 dat_sum <- addnorm(dat_sum, c("strain", "treatment"), method = 1,

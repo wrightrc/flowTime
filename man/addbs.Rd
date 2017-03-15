@@ -35,7 +35,7 @@ annotation <- read.csv(system.file("extdata", "tc_example.csv",
 package = "flowTime"))
 annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
 adat <- annotateFlowSet(dat, annotation)
-loadGates(gatesFile = 'C6Gates.RData')
+loadGates(gatesFile = 'C6Gates')
 dat_sum <- summarizeFlow(adat, ploidy = 'diploid', only = 'singlets',
 channel = 'FL1.A')
 dat_sum <- addbs(dat_sum, column = "FL1.Amean", baseline = "background")

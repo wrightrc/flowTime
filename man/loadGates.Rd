@@ -4,10 +4,16 @@
 \alias{loadGates}
 \title{Load a yeast gate file}
 \usage{
-loadGates(gatesFile = "defaultGates.RData")
+loadGates(gatesFile = "SORPGates", path = NULL, envir = environment())
 }
 \arguments{
-\item{gatesFile}{the gates file to be loaded into memory}
+\item{gatesFile}{the gates file to be loaded into memory, or path to the
+gates file}
+
+\item{path}{The path to the gates file. If 'NULL' this will look through
+lazy loaded data for the gatesFile}
+
+\item{envir}{The environment in which to load the gates}
 }
 \value{
 gate objects created in the current environment

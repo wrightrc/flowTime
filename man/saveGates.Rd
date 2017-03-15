@@ -6,7 +6,8 @@
 \usage{
 saveGates(yeastGate = "yeastGate", dipsingletGate = "dipsingletGate",
   dipdoubletGate = "dipdoubletGate", hapsingletGate = "hapsingletGate",
-  hapdoubletGate = "hapdoubletGate", fileName = "defaultGates.RData")
+  hapdoubletGate = "hapdoubletGate", path = getwd(),
+  fileName = "defaultGates.RData")
 }
 \arguments{
 \item{yeastGate}{a gate object defining the population of yeast cells}
@@ -23,18 +24,20 @@ singlet cells}
 \item{hapdoubletGate}{a gate object defining the population of haploid
 doublet cells}
 
-\item{fileName}{name of the .Rdata file you would like to save these gates
-within}
+\item{path}{path to the folder in which you would like to save the gates}
+
+\item{fileName}{name of the .Rdata file you would like to save these
+gates within}
 }
 \value{
-a .RData file in the "extdata" folder of the package containing the
-specified gates
+a .RData file in the "extdata" folder of the package containing
+the specified gates
 }
 \description{
 Save a yeast gate set
 }
 \examples{
-loadGates("defaultGates.RData")
+loadGates("SORPGates")
 saveGates()
 }
 

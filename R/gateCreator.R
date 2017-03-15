@@ -1,72 +1,3 @@
-#' Create the gate environment
-#'
-#' This environment will allow the gates to be accessible throughout the package and prevent
-#' interference with the global environment.
-#' @export
-#' @return gate environment
-#' @examples loadGates()
-#' ls(gateEnv)
-gateEnv <- new.env()
-load(system.file('extdata', 'Gates', 'defaultGates.RData',
-                 package = 'flowTime'), envir = gateEnv)
-
-#' A gate for the set of all yeast cells
-#'
-#' Typically set in FSC.A by SSC.A space to exclued any debris
-#'     FSC.A  SSC.A
-#'    400000  10000
-#'     50000  15000
-#'     40000  80000
-#'   1250000 600000
-#'   2000000 500000
-#' @format formal class polygonGate
-#' @export
-#' @return yeast gate
-#' @examples loadGates()
-#' show(yeastGate)
-yeastGate <- base::get(x = 'yeastGate', envir = gateEnv)
-
-#' A gate for the set of all diploid singlet yeast cells
-#'
-#' Typically set in FSC.A by FSC.H space
-#' Diploids are typically 5um x 6um ellipsoids while haploids are typically
-#' 4um x 4um spheroids. As a result, diploids are longer and you get a
-#' larger 'area/volume'.
-#'
-#' @format formal class polygonGate
-#' @export
-#' @return diploid singlet gate
-#' @examples loadGates()
-#' dipsingletGate
-dipsingletGate <- base::get(x = 'dipsingletGate', envir = gateEnv)
-
-#' A gate for the set of all diploid doublets
-#'
-#' @format formal class polygonGate
-#' @export
-#' @return diploid doublet gate
-#' @examples loadGates()
-#' dipdoubletGate
-dipdoubletGate <- base::get(x = 'dipdoubletGate', envir = gateEnv)
-
-#' A gate for the set of all haploid singlets
-#' @format formal class polygonGate
-#' @export
-#' @return haploid singlet gate
-#' @examples loadGates()
-#' hapsingletGate
-hapsingletGate <- base::get(x = 'hapsingletGate', envir = gateEnv)
-
-#' A gate for the set of all haploid doublets
-#' @format formal class polygonGate
-#' @export
-#' @return haploid doublet gate
-#' @examples loadGates()
-#' hapdoubletGate
-hapdoubletGate <- base::get(x = 'hapdoubletGate', envir = gateEnv)
-
-
-
 #' Save a yeast gate set
 #'
 #' @param yeastGate a gate object defining the population of yeast cells
@@ -80,36 +11,28 @@ hapdoubletGate <- base::get(x = 'hapdoubletGate', envir = gateEnv)
 #' doublet cells
 #' @param fileName name of the .Rdata file you would like to save these
 #' gates within
+#' @param path path to the folder in which you would like to save the gates
 #'
 #' @return a .RData file in the "extdata" folder of the package containing
 #' the specified gates
 #' @export
 #'
 #' @examples
-#' loadGates("defaultGates.RData")
+#' loadGates("SORPGates")
 #' saveGates()
 saveGates <- function(yeastGate = 'yeastGate',
                       dipsingletGate = 'dipsingletGate',
                       dipdoubletGate = 'dipdoubletGate',
                       hapsingletGate = 'hapsingletGate',
                       hapdoubletGate = 'hapdoubletGate',
+                      path = getwd(),
                       fileName = "defaultGates.RData") {
   if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
                "dipsingletGate", "dipdoubletGate"))) loadGates()
     save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate,
-        hapdoubletGate, file = system.file("extdata", "Gates", fileName,
-                                        package = "flowTime"))
+        hapdoubletGate, file = paste(path, fileName, sep = "/"))
 }
 
-#' List existing gate sets saved in package memory
-#'
-#' @return lists the gates files saved within the flowTime package
-#' @export
-#'
-#' @examples listGates()
-listGates <- function(){
-  list.files(system.file("extdata", "Gates", package = "flowTime"))
-}
 
 #' Create a polygon gate
 #'
@@ -123,8 +46,8 @@ listGates <- function(){
 #' @export
 #'
 #' @examples
-#' polygate(x = c(1,1,10000,10000), y = c(1,10000, 10000, 1), )
-polygate <- function(x, y, filterID = "newGate", channels = c("FSC.A",
+#' polyGate(x = c(1,1,10000,10000), y = c(1,10000, 10000, 1), )
+polyGate <- function(x, y, filterID = "newGate", channels = c("FSC.A",
                                                                 "FSC.H")) {
   if (length(x) != length(y) | !is.numeric(x) | !is.numeric(y)) {
     stop("x coordinate vector must be same length as y coordinate vector")
@@ -166,36 +89,24 @@ ploidy <- function(flowframe) {
   }
 }
 
-#' Set default gates
-#' @description Sets specified file to default gates for use in other
-#' functions
-#'
-#' @param gatesFile the full name of the gates file you would like to set as
-#' default (e.g. 'C6Gates.RData')
-#'
-#' @return overwrites the defaultGates.RData file with the specified gates
-#' file
-#' @export
-#'
-#' @examples
-#' loadGates("defaultGates.RData")
-#' setGates("defaultGates.RData")
-setGates <- function(gatesFile = "defaultGates.RData") {
-  load((system.file("extdata", "Gates", gatesFile, package = "flowTime")))
-  saveGates(fileName = "defaultGates.RData")
-}
-
 #' Load a yeast gate file
 #' @description Loads a set of yeast gates into active memory to be used in
 #' analysis functions
-#' @param gatesFile the gates file to be loaded into memory
+#' @param gatesFile the gates file to be loaded into memory, or path to the
+#' gates file
+#' @param path The path to the gates file. If 'NULL' this will look through
+#' lazy loaded data for the gatesFile
+#' @param envir The environment in which to load the gates
 #'
 #' @return gate objects created in the current environment
 #' @export
+#' @importFrom utils data
 #'
 #' @examples
 #' loadGates()
-loadGates <- function(gatesFile = "defaultGates.RData") {
-  load(system.file("extdata", "Gates", gatesFile, package = "flowTime"),
-       envir = gateEnv)
+loadGates <- function(gatesFile = "SORPGates", path = NULL, envir = environment()) {
+  if(is.null(path)) data(list = c("dipdoubletGate", "dipsingletGate", "hapdoubletGate",
+                                  "hapsingletGate", "yeastGate"), envir = envir)
+  else
+    load(file = paste(path, gatesFile, sep = "/"), envir = globalenv())
 }

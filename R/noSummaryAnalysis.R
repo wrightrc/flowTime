@@ -69,13 +69,10 @@ annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
 #' annotation <- read.csv(system.file("extdata", "ss_example.csv",
 #' package = "flowTime"))
 #' dat <- annotateFlowSet(dat, annotation, mergeBy = "name")
-#' loadGates(gatesFile = 'SORPGates.RData')
+#' loadGates(gatesFile = 'SORPGates')
 #' steadyState(dat, gated = FALSE, ploidy = "diploid", only = "singlets")
 #'
 steadyState <- function(flowset, gated = FALSE, ploidy = "diploid", only = "singlets") {
-
-  if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-                "dipsingletGate", "dipdoubletGate"), envir = gateEnv)) loadGates()
   ### Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)
 
@@ -85,18 +82,23 @@ steadyState <- function(flowset, gated = FALSE, ploidy = "diploid", only = "sing
   ### Gate the samples
   if (gated == FALSE) {
     if (!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-                  "dipsingletGate", "dipdoubletGate"), envir = gateEnv))
+                  "dipsingletGate", "dipdoubletGate")))
       loadGates()
+    yeastGate <- get("yeastGate")
+    hapsingletGate <- get("hapsingletGate")
+    hapdoubletGate <- get("hapdoubletGate")
+    dipsingletGate <- get("dipsingletGate")
+    dipdoubletGate <- get("dipdoubletGate")
     if (ploidy == "haploid") {
       print("Gating with haploid gates...")
-      yeast <- Subset(flowset, flowTime::yeastGate)
-      singlets <- Subset(yeast, flowTime::hapsingletGate)
-      doublets <- Subset(yeast, flowTime::hapdoubletGate)
+    yeast <- Subset(flowset, yeastGate)
+      singlets <- Subset(yeast, hapsingletGate)
+      doublets <- Subset(yeast, hapdoubletGate)
     } else if (ploidy == "diploid") {
       print("Gating with diploid gates...")
-      yeast <- Subset(flowset, flowTime::yeastGate)
-      singlets <- Subset(yeast, flowTime::dipsingletGate)
-      doublets <- Subset(yeast, flowTime::dipdoubletGate)
+      yeast <- Subset(flowset, yeastGate)
+      singlets <- Subset(yeast, dipsingletGate)
+      doublets <- Subset(yeast, dipdoubletGate)
     } else {
       stop("Error: You must define ploidy=\"haploid\" or ploidy=\"diploid\"")
     }
