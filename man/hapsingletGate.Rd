@@ -6,7 +6,7 @@
 \title{A gate for the set of all haploid singlets}
 \format{formal class polygonGate}
 \usage{
-hapsingletGate
+data(hapsingletGate)
 }
 \description{
 A gate for the set of all haploid singlets

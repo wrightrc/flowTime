@@ -4,6 +4,7 @@
 #'
 #' Typically set in FSC.A by SSC.A space to exclued any debris
 #' @format formal class polygonGate
+#' @usage data(yeastGate)
 
 'yeastGate'
 
@@ -15,17 +16,23 @@
 #' larger 'area/volume'.
 #'
 #' @format formal class polygonGate
+#' @usage data(dipsingletGate)
+
 'dipsingletGate'
 
 #' A gate for the set of all diploid doublets
 #'
 #' @format formal class polygonGate
+#' @usage data(dipdoubletGate)
+
 'dipdoubletGate'
 
 #' A gate for the set of all haploid singlets
 #' @format formal class polygonGate
+#' @usage data(hapsingletGate)
 'hapsingletGate'
 
 #' A gate for the set of all haploid doublets
 #' @format formal class polygonGate
+#' @usage data(hapdoubletGate)
 'hapdoubletGate'

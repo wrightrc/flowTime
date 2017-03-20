@@ -6,7 +6,7 @@
 \title{A gate for the set of all yeast cells}
 \format{formal class polygonGate}
 \usage{
-yeastGate
+data(yeastGate)
 }
 \description{
 Typically set in FSC.A by SSC.A space to exclued any debris

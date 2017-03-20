@@ -6,7 +6,7 @@
 \title{A gate for the set of all diploid doublets}
 \format{formal class polygonGate}
 \usage{
-dipdoubletGate
+data(dipdoubletGate)
 }
 \description{
 A gate for the set of all diploid doublets

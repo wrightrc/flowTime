@@ -6,7 +6,7 @@
 \title{A gate for the set of all diploid singlet yeast cells}
 \format{formal class polygonGate}
 \usage{
-dipsingletGate
+data(dipsingletGate)
 }
 \description{
 Typically set in FSC.A by FSC.H space
