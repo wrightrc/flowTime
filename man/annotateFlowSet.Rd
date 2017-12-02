@@ -32,4 +32,3 @@ annotation <- read.csv(system.file("extdata", "ss_example.csv", package =
 annotateFlowSet(dat, annotation, mergeBy = "name")
 
 }
-

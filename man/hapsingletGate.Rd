@@ -12,4 +12,3 @@ data(hapsingletGate)
 A gate for the set of all haploid singlets
 }
 \keyword{datasets}
-

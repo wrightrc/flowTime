@@ -12,4 +12,3 @@ data(dipdoubletGate)
 A gate for the set of all diploid doublets
 }
 \keyword{datasets}
-

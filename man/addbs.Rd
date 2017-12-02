@@ -41,4 +41,3 @@ channel = 'FL1.A')
 dat_sum <- addbs(dat_sum, column = "FL1.Amean", baseline = "background")
 
 }
-

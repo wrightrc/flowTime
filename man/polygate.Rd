@@ -25,4 +25,3 @@ Create a polygon gate
 \examples{
 polyGate(x = c(1,1,10000,10000), y = c(1,10000, 10000, 1), )
 }
-

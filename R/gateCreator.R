@@ -103,8 +103,8 @@ ploidy <- function(flowframe) {
 #' @importFrom utils data
 #'
 #' @examples
-#' loadGates()
-loadGates <- function(gatesFile = "SORPGates", path = NULL, envir = environment()) {
+#' loadGates(system.file("extdata/SORPGates.RData", package = "flowTime"))
+loadGates <- function(gatesFile = NULL, path = NULL, envir = environment()) {
   if(is.null(path)) data(list = c("dipdoubletGate", "dipsingletGate", "hapdoubletGate",
                                   "hapsingletGate", "yeastGate"), envir = envir)
   else

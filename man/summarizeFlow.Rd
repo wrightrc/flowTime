@@ -39,4 +39,3 @@ summarizeFlow(plate1, channel = "FL1.A", gated = TRUE,
 ploidy = "diploid", moments = FALSE, only = "yeast")
 
 }
-

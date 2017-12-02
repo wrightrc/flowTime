@@ -30,9 +30,11 @@
 #' A gate for the set of all haploid singlets
 #' @format formal class polygonGate
 #' @usage data(hapsingletGate)
+
 'hapsingletGate'
 
 #' A gate for the set of all haploid doublets
 #' @format formal class polygonGate
 #' @usage data(hapdoubletGate)
+
 'hapdoubletGate'

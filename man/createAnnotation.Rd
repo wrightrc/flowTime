@@ -23,4 +23,3 @@ package = "flowTime"), alter.names = TRUE)
 annotation <- createAnnotation(yourFlowSet = dat)
 head(annotation)
 }
-

@@ -4,7 +4,7 @@
 \alias{loadGates}
 \title{Load a yeast gate file}
 \usage{
-loadGates(gatesFile = "SORPGates", path = NULL, envir = environment())
+loadGates(gatesFile = NULL, path = NULL, envir = environment())
 }
 \arguments{
 \item{gatesFile}{the gates file to be loaded into memory, or path to the
@@ -23,6 +23,5 @@ Loads a set of yeast gates into active memory to be used in
 analysis functions
 }
 \examples{
-loadGates()
+loadGates(system.file("extdata/SORPGates.RData", package = "flowTime"))
 }
-

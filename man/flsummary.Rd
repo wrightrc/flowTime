@@ -26,4 +26,3 @@ plate1 <- read.flowSet(path = system.file("extdata",
 "ss_example", package = "flowTime"), alter.names = TRUE)
 flsummary(plate1)
 }
-

@@ -27,4 +27,3 @@ plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
 qaGating(plate1)
 
 }
-

@@ -15,4 +15,3 @@ Diploids are typically 5um x 6um ellipsoids while haploids are typically
 larger 'area/volume'.
 }
 \keyword{datasets}
-

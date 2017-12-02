@@ -50,4 +50,3 @@ dat_sum <- addnorm(dat_sum, c("strain", "treatment"), method = 1,
 column = "FL1.Amean")
 
 }
-

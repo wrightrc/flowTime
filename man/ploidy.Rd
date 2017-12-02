@@ -24,4 +24,3 @@ package = "flowTime"), alter.names = TRUE)
 ploidy(dat$A01.fcs)
 
 }
-

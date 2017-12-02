@@ -36,4 +36,3 @@ loadGates(gatesFile = 'SORPGates')
 steadyState(dat, gated = FALSE, ploidy = "diploid", only = "singlets")
 
 }
-

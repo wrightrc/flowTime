@@ -63,3 +63,44 @@ getTime <- function(flowframe) {
   time <- time_raw[1] * 60 + time_raw[2] + time_raw[3]/60 + time_raw[4]/6000
   return(time)
 }
+
+
+#' Read FCS files from set of plates
+#'
+#' @description Reads all folders within the specified path containing the
+#' specified pattern in the folder names. Each folder contains a set a plate
+#' of FCS files. These folders typically make up a whole experiment. Plates
+#' are numbered according to the standard lexicographical ordering of your
+#' operating system.
+#'
+#' @param path The path to search for folders containing FCS files
+#' @param pattern The \link[base]{regex} pattern used to identify
+#' the folders of FCS files to be read
+#' @param ... Additional arguments passed to read.flowSet.
+#' Note that `alter.names` is forced to be TRUE in this implementation.
+#'
+#' @return A single flowSet containing all FCS files within the
+#' identified folders. The index of each folder in the list according
+#' to lexicographical ordering (1,2,...) is prepended to the sampleNames.
+#'
+#' @export
+#'
+#' @examples
+#' # Read in both of the example data sets as a single flowSet
+#' plate1<-read.plateSet(path = system.file("extdata", package = "flowTime"),
+#' pattern = "")
+#'
+read.plateSet <- function(path = getwd(), pattern = "", ...){
+  files <- grep(pattern = pattern, x = list.dirs(path, recursive = FALSE,
+                                                 full.names = FALSE),
+                value = TRUE)
+  for(file in files) {
+    plate <- read.flowSet(path = paste(path, file, sep = "/"), alter.names = TRUE, ...)
+    plate_num <- which(files == file)
+    sampleNames(plate) <- paste0(plate_num, sampleNames(plate))
+    pData(plate)$name <- sampleNames(plate)
+    pData(plate)$folder <- file
+    if('flow_set' %in% ls()) flow_set <- rbind2(flow_set, plate) else flow_set <- plate
+  }
+  return(flow_set)
+}

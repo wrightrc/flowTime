@@ -12,4 +12,3 @@ data(yeastGate)
 Typically set in FSC.A by SSC.A space to exclued any debris
 }
 \keyword{datasets}
-
