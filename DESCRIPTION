@@ -1,48 +1,40 @@
 Package: flowTime
-Title: Annotation and analysis of biological dynamical systems using flow cytometry
-Version: 0.99.7
-Authors@R: c(person("R. Clay", "Wright", email = "wright.clay@gmail.com", 
-    role = c("aut", "cre")), person("Nick", "Bolten", 
-    email = "nbolten@gmail.com", role = c("aut")), 
-    person("Edith", "Pierre-Jerome", email = "", role = c("aut")))
-Description: This package was developed for analysis of both dynamic and steady 
-    state experiments examining the function of gene regulatory networks in 
-    yeast (strain W303) expressing fluorescent reporter proteins using a 
-    BD Accuri C6 and SORP cytometers. However, the functions are for the most 
-    part general and may be adapted for analysis of other organisms using other 
-    flow cytometers. Functions in this package facilitate the annotation of 
-    flow cytometry data with experimental metadata, as is requisite for 
-    dissemination and general ease-of-use. Functions for creating, saving
-    and loading gate sets are also included.
-    In the past, we have typically generated summary statistics for
-    each flowset for each timepoint and then annotated and analyzed these
-    summary statistics. This method loses a great deal of the power that comes
-    from the large amounts of individual cell data generated in flow cytometry,
-    by essentially collapsing this data into a bulk measurement after 
-    subsetting. In addition to these summary functions, this package also 
-    contains functions to facilitate annotation and analysis of steady-state 
-    or time-lapse data utilizing all of the data collected from the thousands 
-    of individual cells in each sample.
-Depends: R (>= 3.4),
-    flowCore,
-    plyr
+Title: Annotation and analysis of biological dynamical systems using
+        flow cytometry
+Version: 1.3.0
+Authors@R: c(person("R. Clay", "Wright", email =
+        "wright.clay@gmail.com", role = c("aut", "cre")),
+        person("Nick", "Bolten", email = "nbolten@gmail.com", role =
+        c("aut")), person("Edith", "Pierre-Jerome", email = "", role =
+        c("aut")))
+Description: This package was developed for analysis of both dynamic
+        and steady state experiments examining the function of gene
+        regulatory networks in yeast (strain W303) expressing
+        fluorescent reporter proteins using a BD Accuri C6 and SORP
+        cytometers. However, the functions are for the most part
+        general and may be adapted for analysis of other organisms
+        using other flow cytometers. Functions in this package
+        facilitate the annotation of flow cytometry data with
+        experimental metadata, as is requisite for dissemination and
+        general ease-of-use. Functions for creating, saving and loading
+        gate sets are also included. In the past, we have typically
+        generated summary statistics for each flowset for each
+        timepoint and then annotated and analyzed these summary
+        statistics. This method loses a great deal of the power that
+        comes from the large amounts of individual cell data generated
+        in flow cytometry, by essentially collapsing this data into a
+        bulk measurement after subsetting. In addition to these summary
+        functions, this package also contains functions to facilitate
+        annotation and analysis of steady-state or time-lapse data
+        utilizing all of the data collected from the thousands of
+        individual cells in each sample.
+Depends: R (>= 3.4), flowCore, plyr
 License: Artistic-2.0
 LazyData: true
-biocViews:
-    FlowCytometry,
-    TimeCourse,
-    Visualization,
-    DataImport,
-    CellBasedAssays
-Suggests:
-    knitr,
-    rmarkdown,
-    flowViz,
-    ggplot2,
-    BiocGenerics,
-    moments,
-    stats
-Imports:
-    utils
+biocViews: FlowCytometry, TimeCourse, Visualization, DataImport,
+        CellBasedAssays
+Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, moments,
+        stats
+Imports: utils
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
