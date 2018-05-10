@@ -69,7 +69,7 @@ loadGates() # use the default included gateSet
 dat.SS <- steadyState(flowset = adat, ploidy = 'diploid', only = 'singlets')
 
 p <- ggplot(dat.SS, aes(x = as.factor(treatment), y = FL2.A, fill = AFB)) + 
-  geom_boxplot(outlier.size = NA) + facet_grid(IAA~AFB) + 
+  geom_boxplot(outlier.shape = NA) + facet_grid(IAA~AFB) + 
   theme_classic(base_family = 'Arial', base_size = 16) + ylim(c(-1000,10000)) +
   xlab(expression(paste('Auxin (',mu,'M)',sep = ""))) + 
   ylab('Fluorescence (AU)') + theme(legend.position="none")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/generalFunctions.R
 \name{read.plateSet}
 \alias{read.plateSet}
-\title{Read a FCS files from set of plates}
+\title{Read FCS files from set of plates}
 \usage{
 read.plateSet(path = getwd(), pattern = "", ...)
 }
