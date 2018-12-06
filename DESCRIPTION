@@ -32,7 +32,7 @@ Depends: R (>= 3.4), flowCore, plyr
 License: Artistic-2.0
 LazyData: true
 biocViews: FlowCytometry, TimeCourse, Visualization, DataImport,
-        CellBasedAssays
+        CellBasedAssays, ImmunoOncology
 Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, moments,
         stats
 Imports: utils
