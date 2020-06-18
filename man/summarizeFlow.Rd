@@ -4,21 +4,25 @@
 \alias{summarizeFlow}
 \title{Generate summary statistics for a flowSet}
 \usage{
-summarizeFlow(flowset, channel = "FL1.A", gated = FALSE, ploidy = FALSE,
-  moments = FALSE, only = FALSE)
+summarizeFlow(
+  flowset,
+  channel = NA,
+  gated = FALSE,
+  ploidy = FALSE,
+  only = FALSE
+)
 }
 \arguments{
 \item{flowset}{the \code{flowSet} to be summarized}
 
-\item{channel}{\code{character} which data channel should be summarized}
+\item{channel}{\code{character vector} which data channel(s) should be
+summarized? If excluded (or \code{NA}) all channels will be summarized
+(default)}
 
 \item{gated}{\code{boolean} is the data already appropriately gated?}
 
 \item{ploidy}{\code{character} does the flowSet contain haploid or diploid
 cells?}
-
-\item{moments}{\code{boolean} split the data into early, middle, and late
-moments?}
 
 \item{only}{\code{character} summarize only "singlet", "doublet", or all
 "yeast" cells, FALSE will return all}
@@ -36,6 +40,6 @@ Returns a list of data frames, e.g. output$singlets, output$doublets, etc.
 plate1 <- read.flowSet(path = system.file("extdata", "ss_example",
 package = "flowTime"), alter.names = TRUE)
 summarizeFlow(plate1, channel = "FL1.A", gated = TRUE,
-ploidy = "diploid", moments = FALSE, only = "yeast")
+ploidy = "diploid", only = "yeast")
 
 }

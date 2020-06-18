@@ -4,8 +4,12 @@
 \alias{addbs}
 \title{Add background subtraction to a summary data frame}
 \usage{
-addbs(flowData, column = "FL3.Amean", baseline_column = "strain",
-  baseline = "noYFP")
+addbs(
+  flowData,
+  column = "FL3.Amean",
+  baseline_column = "strain",
+  baseline = "noYFP"
+)
 }
 \arguments{
 \item{flowData}{the summary data frame of flowSet to be background

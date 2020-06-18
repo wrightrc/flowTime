@@ -1,7 +1,6 @@
 
 #' Get summary statistics for fluorescence or other data channels of a flowSet
 #'
-#' @import plyr
 #' @import flowCore
 #'
 #' @param flowset the \code{flowSet} to create summary statistics for
@@ -47,7 +46,7 @@ flsummary <- function(flowset, channel = NA) {
 
   fl <- fsApply(flowset, meanMedianSD)
   if(!is.na(channel)) {fl <- fl %>% as_tibble() %>%
-    dplyr::select(contains(c("name", channel)))}
+    dplyr::select(dplyr::contains(c("name", channel)))}
 
   name <- fsApply(flowset, function(x) keyword(x)$GUID)
   colnames(name) <- "name"
@@ -59,12 +58,12 @@ flsummary <- function(flowset, channel = NA) {
   }
 
   # Put it all together
-  flsummary <- as.data.frame(cbind(time, btime, atime, events, conc, fl, name))
+  flsummary <- as.data.frame(cbind(name, time, btime, atime, events, conc, fl))
   print(class(flsummary))
   # Make rows filename keys
   rownames(flsummary) <- name
   print(class(pData(flowset)))
-  flsummary <- join(flsummary, pData(flowset), by = "name")
+  flsummary <- dplyr::full_join(flsummary, pData(flowset), by = "name")
   return(flsummary)
 }
 
@@ -77,12 +76,11 @@ flsummary <- function(flowset, channel = NA) {
 #'
 #' @param flowset the \code{flowSet} to be summarized
 #' @param channel \code{character vector} which data channel(s) should be
-#' summarized? If excluded all channels will be summarized (default)
+#' summarized? If excluded (or \code{NA}) all channels will be summarized
+#' (default)
 #' @param gated \code{boolean} is the data already appropriately gated?
 #' @param ploidy \code{character} does the flowSet contain haploid or diploid
 #' cells?
-#' @param moments \code{boolean} split the data into early, middle, and late
-#' moments?
 #' @param only \code{character} summarize only "singlet", "doublet", or all
 #' "yeast" cells, FALSE will return all
 #'
@@ -95,10 +93,10 @@ flsummary <- function(flowset, channel = NA) {
 #' plate1 <- read.flowSet(path = system.file("extdata", "ss_example",
 #' package = "flowTime"), alter.names = TRUE)
 #' summarizeFlow(plate1, channel = "FL1.A", gated = TRUE,
-#' ploidy = "diploid", moments = FALSE, only = "yeast")
+#' ploidy = "diploid", only = "yeast")
 #'
-summarizeFlow <- function(flowset, channel = "all", gated = FALSE,
-                          ploidy = FALSE, moments = FALSE, only = FALSE) {
+summarizeFlow <- function(flowset, channel = NA, gated = FALSE,
+                          ploidy = FALSE, only = FALSE) {
 
   if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
                "dipsingletGate", "dipdoubletGate"))) loadGates()
@@ -152,12 +150,12 @@ summarizeFlow <- function(flowset, channel = "all", gated = FALSE,
         singletsum <- flsummary(singlets, channel = channel)
         return(singletsum)
       }
-        else if (only == "doublets") {
+      else if (only == "doublets") {
         print("Summarizing doublets events...")
         doubletsum <- flsummary(doublets, channel = channel)
         return(doubletsum)
       }
-        else if (only == "yeast") {
+      else if (only == "yeast") {
         print("Summarizing all yeast events...")
         yeastsum <- flsummary(yeast, channel = channel)
         return(yeastsum)
@@ -174,8 +172,10 @@ summarizeFlow <- function(flowset, channel = "all", gated = FALSE,
 }
 
 #' Normalize fluorescence
+#'
+#' @importFrom plyr "ddply"
 #' @description Produces a normalized fluorescence column 'normed'. Expects
-#' the 'FL1.A_bs' column to exist or a column to be specified. Has two
+#' the 'FL1.A_bs' column to exist or a column to be specified. Has three
 #' different methods, version 1 and version 2, described in the script
 #'
 #' @param frame \code{data frame} of summary statistics to be normalized
@@ -191,8 +191,8 @@ summarizeFlow <- function(flowset, channel = "all", gated = FALSE,
 #' regardless of whether the data is a time series. Method 2 finds the mean
 #' value of all time points with time values less than 0 for each group and
 #' normalizes each group by this respective value. Requires a time series
-#' with negative time values to work. Version 3 fits a linear model to the
-#' pre-zero time points for each groups,  infers the y-intercept, and
+#' with negative time values to work. Method 3 fits a linear model to the
+#' pre-zero time points for each groups, infers the y-intercept, and
 #' normalizes using this intercept. Method 3 also requires a
 #' time series with negative time values to work.
 #' @export
@@ -270,7 +270,7 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
   }
 
   # Run the chosen estimation function and apply it
-  frame <- ddply(frame, factor_in, estimate_0)
+  frame <- plyr::ddply(frame, factor_in, estimate_0)
   frame[,factors] <- apply(frame[,factors],2,as.factor)
   return(frame)
 }

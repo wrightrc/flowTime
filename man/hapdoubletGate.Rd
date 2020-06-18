@@ -4,7 +4,9 @@
 \name{hapdoubletGate}
 \alias{hapdoubletGate}
 \title{A gate for the set of all haploid doublets}
-\format{formal class polygonGate}
+\format{
+formal class polygonGate
+}
 \usage{
 data(hapdoubletGate)
 }

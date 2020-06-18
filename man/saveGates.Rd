@@ -4,10 +4,15 @@
 \alias{saveGates}
 \title{Save a yeast gate set}
 \usage{
-saveGates(yeastGate = "yeastGate", dipsingletGate = "dipsingletGate",
-  dipdoubletGate = "dipdoubletGate", hapsingletGate = "hapsingletGate",
-  hapdoubletGate = "hapdoubletGate", path = getwd(),
-  fileName = "defaultGates.RData")
+saveGates(
+  yeastGate = "yeastGate",
+  dipsingletGate = "dipsingletGate",
+  dipdoubletGate = "dipdoubletGate",
+  hapsingletGate = "hapsingletGate",
+  hapdoubletGate = "hapdoubletGate",
+  path = getwd(),
+  fileName = "defaultGates.RData"
+)
 }
 \arguments{
 \item{yeastGate}{a gate object defining the population of yeast cells}
