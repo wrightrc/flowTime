@@ -4,15 +4,14 @@
 \alias{flsummary}
 \title{Get summary statistics for fluorescence or other data channels of a flowSet}
 \usage{
-flsummary(flowset, channel = "FL3.A", moments = FALSE)
+flsummary(flowset, channel = NA)
 }
 \arguments{
 \item{flowset}{the \code{flowSet} to create summary statistics for}
 
-\item{channel}{\code{character} the data channel to summarize}
-
-\item{moments}{\code{boolean} if \code{TRUE} then split each frame into
-early, middle, and late events}
+\item{channel}{option \code{character vector} of the data channel(s) to
+summarize. By default all channels will be summarized. Setting channels does
+not reduce computation time}
 }
 \value{
 A \code{data frame} containing summary statistics (mean, median,

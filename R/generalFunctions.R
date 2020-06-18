@@ -5,6 +5,8 @@
 #' @return a matrix with a single row for the flow frame and mean, median, and
 #' sd columns for each column of the expression measurements
 #' @export
+#' @importFrom magrittr "%>%"
+#' @importFrom tibble "as_tibble"
 #'
 #' @examples
 #' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
@@ -12,14 +14,14 @@
 #' meanMedianSD(plate1@frames$A01.fcs)
 #' fsApply(plate1, meanMedianSD)
 meanMedianSD <- function(frame){
-  pkgconfig::set_config("tibble::rownames" = NA)
   name <- frame@description$GUID
   frame <- exprs(frame)
-  out <- frame %>% as.tibble() %>%
-    dplyr::summarise(across(
+  out <- frame %>%
+    tibble::as_tibble() %>%
+    dplyr::summarise(dplyr::across(
       .fns = list(mean = mean,
-                  median = median,
-                  sd = sd
+                  median = stats::median,
+                  sd = stats::sd
                   ),
       .names = "{col}{fn}")) %>% as.matrix
   row.names(out) <- name

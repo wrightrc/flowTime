@@ -28,13 +28,13 @@ Description: This package was developed for analysis of both dynamic
         annotation and analysis of steady-state or time-lapse data
         utilizing all of the data collected from the thousands of
         individual cells in each sample.
-Depends: R (>= 3.4), flowCore, plyr
+Depends: R (>= 3.4), flowCore
 License: Artistic-2.0
 LazyData: true
 biocViews: FlowCytometry, TimeCourse, Visualization, DataImport,
         CellBasedAssays, ImmunoOncology
-Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, moments,
+Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, 
         stats
-Imports: utils
+Imports: utils, dplyr, tibble, magrittr, plyr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0

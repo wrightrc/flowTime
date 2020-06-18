@@ -4,7 +4,9 @@
 \name{yeastGate}
 \alias{yeastGate}
 \title{A gate for the set of all yeast cells}
-\format{formal class polygonGate}
+\format{
+formal class polygonGate
+}
 \usage{
 data(yeastGate)
 }

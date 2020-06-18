@@ -4,8 +4,12 @@
 \alias{addnorm}
 \title{Normalize fluorescence}
 \usage{
-addnorm(frame, factor_in = c("strain", "treatment"), method = 1,
-  column = "FL3.Amean_bs")
+addnorm(
+  frame,
+  factor_in = c("strain", "treatment"),
+  method = 1,
+  column = "FL3.Amean_bs"
+)
 }
 \arguments{
 \item{frame}{\code{data frame} of summary statistics to be normalized}
@@ -22,7 +26,7 @@ the data frame by}
 }
 \description{
 Produces a normalized fluorescence column 'normed'. Expects
-the 'FL1.A_bs' column to exist or a column to be specified. Has two
+the 'FL1.A_bs' column to exist or a column to be specified. Has three
 different methods, version 1 and version 2, described in the script
 }
 \details{
@@ -32,8 +36,8 @@ the group by this point. This method is default because it works
 regardless of whether the data is a time series. Method 2 finds the mean
 value of all time points with time values less than 0 for each group and
 normalizes each group by this respective value. Requires a time series
-with negative time values to work. Version 3 fits a linear model to the
-pre-zero time points for each groups,  infers the y-intercept, and
+with negative time values to work. Method 3 fits a linear model to the
+pre-zero time points for each groups, infers the y-intercept, and
 normalizes using this intercept. Method 3 also requires a
 time series with negative time values to work.
 }

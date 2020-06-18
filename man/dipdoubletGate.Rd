@@ -4,7 +4,9 @@
 \name{dipdoubletGate}
 \alias{dipdoubletGate}
 \title{A gate for the set of all diploid doublets}
-\format{formal class polygonGate}
+\format{
+formal class polygonGate
+}
 \usage{
 data(dipdoubletGate)
 }

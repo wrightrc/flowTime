@@ -4,7 +4,9 @@
 \name{dipsingletGate}
 \alias{dipsingletGate}
 \title{A gate for the set of all diploid singlet yeast cells}
-\format{formal class polygonGate}
+\format{
+formal class polygonGate
+}
 \usage{
 data(dipsingletGate)
 }
