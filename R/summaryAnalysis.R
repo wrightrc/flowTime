@@ -5,27 +5,24 @@
 #' @import flowCore
 #'
 #' @param flowset the \code{flowSet} to create summary statistics for
-#' @param channel \code{character} the data channel to summarize
-#' @param moments \code{boolean} if \code{TRUE} then split each frame into
-#' early, middle, and late events
+#' @param channel option \code{character vector} of the data channel(s) to
+#' summarize. By default all channels will be summarized. Setting channels does
+#' not reduce computation time
 #'
 #' @return A \code{data frame} containing summary statistics (mean, median,
 #' SD) for the specified fluorescent channel and time moments of the flowSet.
 #' @export
 #'
-#' @examples plate1 <- read.flowSet(path = system.file("extdata",
+#' @examples
+#' plate1 <- read.flowSet(path = system.file("extdata",
 #' "ss_example", package = "flowTime"), alter.names = TRUE)
 #' flsummary(plate1)
-flsummary <- function(flowset, channel = "FL3.A", moments = FALSE) {
+flsummary <- function(flowset, channel = NA) {
   # Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)
 
   # Initialize empty matrices/data frames to increase efficiency
   warnings <- c()
-
-  if (moments == TRUE) {
-    requireNamespace(moments)
-  }
 
   # Get time of each frame in minutes of the day
   btime_raw <- fsApply(flowset, function(x)
@@ -48,27 +45,9 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE) {
     }
   }
 
-  fl_mean <- fsApply(flowset, function(x) base::mean(x[, channel]),
-                     use.exprs = TRUE)
-  fl_median <- fsApply(flowset, function(x) stats::median(x[, channel]),
-                       use.exprs = TRUE)
-  fl_sd <- fsApply(flowset, function(x) stats::sd(x[, channel]), use.exprs = TRUE)
-  fl <- data.frame(fl_mean, fl_median, fl_sd)
-  colnames(fl) <- paste(channel, c("mean", "median", "sd"), sep = "")
-
-  # Do we want the first few moments?
-  if (moments == TRUE) {
-    requireNamespace(moments)
-    fl_var <- data.frame(fsApply(flowset, function(x)
-      stats::var(x[, channel]), use.exprs = TRUE))
-    fl_skew <- data.frame(fsApply(flowset, function(x)
-      moments::skewness(x[, channel]), use.exprs = TRUE))
-    fl_kurt <- data.frame(fsApply(flowset, function(x)
-      moments::kurtosis(x[, channel]), use.exprs = TRUE))
-    fl_moments <- data.frame(fl_var, fl_skew, fl_kurt)
-    colnames(fl_moments) <- paste(channel, c("var", "skew", "kurt"), sep = "")
-    fl <- cbind(fl, fl_moments)
-  }
+  fl <- fsApply(flowset, meanMedianSD)
+  if(!is.na(channel)) {fl <- fl %>% as_tibble() %>%
+    dplyr::select(contains(c("name", channel)))}
 
   name <- fsApply(flowset, function(x) keyword(x)$GUID)
   colnames(name) <- "name"
@@ -80,10 +59,11 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE) {
   }
 
   # Put it all together
-  flsummary <- cbind(time, btime, atime, events, conc, fl, name)
-
+  flsummary <- as.data.frame(cbind(time, btime, atime, events, conc, fl, name))
+  print(class(flsummary))
   # Make rows filename keys
   rownames(flsummary) <- name
+  print(class(pData(flowset)))
   flsummary <- join(flsummary, pData(flowset), by = "name")
   return(flsummary)
 }
@@ -96,7 +76,8 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE) {
 #'
 #'
 #' @param flowset the \code{flowSet} to be summarized
-#' @param channel \code{character} which data channel should be summarized
+#' @param channel \code{character vector} which data channel(s) should be
+#' summarized? If excluded all channels will be summarized (default)
 #' @param gated \code{boolean} is the data already appropriately gated?
 #' @param ploidy \code{character} does the flowSet contain haploid or diploid
 #' cells?
@@ -116,7 +97,7 @@ flsummary <- function(flowset, channel = "FL3.A", moments = FALSE) {
 #' summarizeFlow(plate1, channel = "FL1.A", gated = TRUE,
 #' ploidy = "diploid", moments = FALSE, only = "yeast")
 #'
-summarizeFlow <- function(flowset, channel = "FL1.A", gated = FALSE,
+summarizeFlow <- function(flowset, channel = "all", gated = FALSE,
                           ploidy = FALSE, moments = FALSE, only = FALSE) {
 
   if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
@@ -134,7 +115,7 @@ summarizeFlow <- function(flowset, channel = "FL1.A", gated = FALSE,
   # Gate the samples
   if (gated == TRUE) {
     print("Summarizing all events...")
-    flowsum <- flsummary(flowset, channel = channel, moments = moments)
+    flowsum <- flsummary(flowset, channel = channel)
     return(flowsum)
   }
   else {
@@ -158,32 +139,27 @@ summarizeFlow <- function(flowset, channel = "FL1.A", gated = FALSE,
     if (only == FALSE) {
       # Normalize and summarize each subset
       print("Summarizing all yeast events...")
-      yeastsum <- flsummary(yeast, channel = channel, moments = moments)
+      yeastsum <- flsummary(yeast, channel = channel)
       print("Summarizing doublets events...")
-      doubletsum <- flsummary(doublets, channel = channel,
-                              moments = moments)
+      doubletsum <- flsummary(doublets, channel = channel)
 
       print("Summarizing singlets events...")
-      singletsum <- flsummary(singlets, channel = channel,
-                              moments = moments)
+      singletsum <- flsummary(singlets, channel = channel)
     }
     else {
       if (only == "singlets") {
         print("Summarizing singlets events...")
-        singletsum <- flsummary(singlets, channel = channel,
-                                moments = moments)
+        singletsum <- flsummary(singlets, channel = channel)
         return(singletsum)
       }
         else if (only == "doublets") {
         print("Summarizing doublets events...")
-        doubletsum <- flsummary(doublets, channel = channel,
-                                moments = moments)
+        doubletsum <- flsummary(doublets, channel = channel)
         return(doubletsum)
       }
         else if (only == "yeast") {
         print("Summarizing all yeast events...")
-        yeastsum <- flsummary(yeast, channel = channel,
-                              moments = moments)
+        yeastsum <- flsummary(yeast, channel = channel)
         return(yeastsum)
       }
       else {
