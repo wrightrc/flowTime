@@ -1,3 +1,31 @@
+#' Summary statistic columns for a flow frame
+#'
+#' @param frame a \code{flowFrame}
+#'
+#' @return a matrix with a single row for the flow frame and mean, median, and
+#' sd columns for each column of the expression measurements
+#' @export
+#'
+#' @examples
+#' plate1<-read.flowSet(path = system.file("extdata", "ss_example", package =
+#' "flowTime"), alter.names = TRUE)
+#' meanMedianSD(plate1@frames$A01.fcs)
+#' fsApply(plate1, meanMedianSD)
+meanMedianSD <- function(frame){
+  pkgconfig::set_config("tibble::rownames" = NA)
+  name <- frame@description$GUID
+  frame <- exprs(frame)
+  out <- frame %>% as.tibble() %>%
+    dplyr::summarise(across(
+      .fns = list(mean = mean,
+                  median = median,
+                  sd = sd
+                  ),
+      .names = "{col}{fn}")) %>% as.matrix
+  row.names(out) <- name
+  out
+}
+
 #' Quality assurance check
 #' @description Check whether a flowSet (or a single flowFrame) contains empty
 #' values, in which case normalization may fail (divide by zero). This is
