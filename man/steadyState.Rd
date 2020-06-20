@@ -4,7 +4,7 @@
 \alias{steadyState}
 \title{Analysis of steady state fluorescence flow cytometry}
 \usage{
-steadyState(flowset, gated = FALSE, ploidy = "diploid", only = "singlets")
+steadyState(flowset, gated = FALSE, ploidy = NA, only = NA)
 }
 \arguments{
 \item{flowset}{your flowSet to be analyzed}
@@ -15,7 +15,7 @@ steadyState(flowset, gated = FALSE, ploidy = "diploid", only = "singlets")
 ploidy of you strains}
 
 \item{only}{\code{character} which population of events to analyze,
-'yeast', singlets', or 'doublets'?}
+'yeast', 'singlets', or 'doublets'?}
 }
 \value{
 a data frame containing all of the selected subset of events from
