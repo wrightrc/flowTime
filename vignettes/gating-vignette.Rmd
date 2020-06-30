@@ -1,0 +1,174 @@
+---
+title: "Yeast gating"
+author: "R Clay Wright"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Yeast gating}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = TRUE)
+library(flowCore)
+library(flowTime)
+library(ggplot2)
+```
+
+This vignette walks through visualization and creation of gate sets and schemes used to measure the dynamic responses of yeast synthetic signaling pathways by flow cytometry. 
+
+Budding yeast cultures contain a wide range of cell size and granularity due to bud growth and scarring. Size and granularity are roughly measured by the forward and side scatter area parameters, FSC-A and SSC-A. Throughout this vignette these parameters with dashes and dots will be used interchangeably--i.e. FSC-A = FSC.A--as within R code `FSC-A` is read as "FSC minus A".
+
+Let's read in some example data to see what an FSC.A vs SSC.A plot typically looks like.
+
+```{r}
+data <- read.flowSet(path = "/Volumes/GoogleDrive/Shared drives/PlantSynBioLab/Data/Mahbub/FlowSets/20200614_AFB_epistasis", phenoData = "annotation.txt")
+```
+
+To plot flow data we will use the `ggcyto` package, and to define gates we will use the `flowStats`, `flowClust` and `openCyto` packages. To build our gate set we will use the `flowWorkspace` package, which is automatically imported by `openCyto`. Let's load these and I will also comment out some lines linking you to the relevant vignettes in these packages for your reference. 
+```{r}
+#library(BiocManager)
+#BiocManager::install("openCyto")
+#BiocManager::install("ggcyto")
+
+library("openCyto")
+library("ggcyto")
+library("flowClust")
+
+#vignette("flowWorkspace-Introduction", "flowWorkspace")
+#vignette('HowToAutoGating', package = "openCyto")
+
+```
+
+Now what was that plot we wanted to make? FSC.A vs SSC.A, roughly representing the Size vs. Granularity of each cell (or event).
+```{r}
+autoplot(data[21:24], x = "FSC-A", y = "SSC-A") 
+```
+Notice how most of the events are clustered very close to the origin, but a few outlier events with FSC.A and/or SSC.A values 10 times that of the average are stretching out our axis. Some of the events collected may be junk in the media! Debris, clumps of cells, dead cells, flotsam, jetsam, dust, who-knows. We don't want to include this in our analysis, we only want to measure cells.
+
+Cytometry allows us to rationally remove this noise from our data, by only selecting the cells within a boundary called a gate. We can define gates in any parameter space and almost any area within that space. We can apply a series of gates in order to define specific cells we want to analyze. 
+
+So in this case we want to remove those high FSC-A events, as they are not likely cells. To gate out the high FSC-A junk, we can define a vertical line on the FSC.A axis and only carry forward the majority of cells on the left-hand side of that line. To define the location of this line in a reproducible way we can measure the percentage of events on that side and aim for a particular number, typically 99% or 99.5%, but this will depend on your conditions and equipment. 
+
+Let's use only the lower 99th quantile of the data to define our gate automatically via the `openCyto::gate_quantile` function. We can use the `autoplot` function to see how much of the tail of our event distribution we have removed.
+```{r}
+Debris <- gate_quantile(fr = data[[3]], channel = "FSC.A", probs = 0.99, filterId = "Debris")
+autoplot(data[[3]], x = "FSC-A") + geom_gate(nonDebris)
+```
+
+We can also view this gate on any other axes, and create a table summarizing the proportion of events in this gate for several frames. 
+```{r}
+autoplot(data[21:24], x = "FSC-A", "SSC-A") + geom_gate(Debris)
+toTable(summary(filter(data[c(3,21:24)], !Debris)))
+```
+
+
+While this gate which was determined based on one timepoint (or frame) doesn't look bad it might be good to define gates based on a whole flowSet that covers the range of phenotypic diversity between strains, growth conditions, and time. To do this, let's make a big frame contain the whole flowSet.
+```{r}
+#Initialize the single frame
+data.1frame <- data[[1]]
+#fill the single frame with the exprs data from each frame 
+# in the flow set
+exprs(data.1frame) <- fsApply(data, function(x) {
+  x <- exprs(x)
+  return(x)
+})
+
+autoplot(data.1frame, x = "FSC-A", "SSC-A")
+```
+We also want to remove junk at the lower end of the FSC and SSC scales. To get a better view of what is going on towards the origin of this plot we can use a log or biexponential transform, but on the of the most useful transforms is the logicle transform, which is an generalization of a hyperbolic sine transformation. We can plot our data on this scale by simply adding `scale_x_logicle`
+
+```{r}
+autoplot(data.1frame, x = "FSC-A", "SSC-A") + scale_x_logicle() + scale_y_logicle()
+```
+
+Let's go ahead and apply this transformation to the data so that we can build a gate to remove debris on this scale
+```{r}
+chnls <- c("FSC.A", "SSC.A", "FSC.H", "SSC.H")
+trans <- estimateLogicle(data.1frame, channels = chnls)
+inv.trans <- inverseLogicleTransform(trans)
+data.1frame <- transform(data.1frame, trans)
+autoplot(data.1frame, x = "FSC-A", "SSC-A")
+```
+
+Now instead of defining cutoffs based on quantiles, we can define an ellipse containing 95% of this data representing our entire flowSet. To do this we will use the `gate_flowclust_2d` function.
+
+
+```{r}
+yeast <- gate_flowClust_2d(data.1frame, xChannel = "FSC.A", yChannel =  "SSC.A",                        K = 1, quantile = .95, min = c(0,0))
+autoplot(data.1frame, x = "FSC-A", y = "SSC-A") + geom_gate(yeast)
+
+```
+To apply this gate across our whole flowSet, we need to either transform the whole flowSet, 
+```{r}
+yeast <- transform(yeast, inv.trans)
+data <- transform(data, inv.trans)
+data.1frame <- transform(data.1frame, inv.trans)
+```
+
+```{r}
+autoplot(data[c(1, 41, 81, 120, 160)], x = "FSC-A", "SSC-A") + geom_gate(yeast)
+invisible(capture.output( 
+  # we have to use this to prevent summary from printing
+  f<- summary(filter(data, yeast))))
+# Now we can print our summary as a table
+toTable(f)
+```
+So this conservative gating strategy gets rid of many large particles in the earlier timepoints/frames. 
+
+Now we can make a gating template to begin storing all of this gating information in.
+```{r, gating-template}
+gtFile <- system.file("extdata/gating_template/tcell.csv", package = "openCyto")
+library(data.table)
+gt <- fread(gtFile)
+write.csv(gt, file= "gating_template.csv")
+```
+
+As mentioned above we are using budding yeast, which divide by growing new smaller cells called buds periodically. These budding cells, as well as dividing mammalian cells or fission yeast cells or two cells stuck together, are called doublets in flow cytometry lingo. Because dividing cells are devoting much of their energy to dividing this can introduce more noise in our measurements of signaling pathways and the proteins in them. So we want to gate out only the singlet cells, that don't have significant buds. 
+
+To find the singlet cells we will compare the size of events, the FSC-A (forward scatter area) parameter again, to the forward scatter height parameter. If two cells pass through the path of the laser immediately next to each other they will generate a pulse that is twice as wide, but equally as high, as a single cell. So doublets will have twice the area of singlets, and singlets will fall roughly on the line  FSC-A = FSC-H. The `flowStats::gate_singlet` function provides a convenient, reproducible, data-driven method for gating singlets.  
+```{r}
+autoplot(Subset(data.1frame, yeast), "FSC-A", "FSC-H")
+library(flowStats)
+chnl <- c("FSC-A", "FSC-H")
+singlets <- gate_singlet(x = Subset(data.1frame, yeast), area = "FSC.A",height = "FSC.H", prediction_level = 0.999, maxit = 20)
+autoplot(Subset(data.1frame, yeast), "FSC-A", "FSC-H") + geom_gate(singlets)
+```
+
+Now lets look at how this plays out for several frames
+
+```{r}
+autoplot(data[c(1:4, 41:44)], x = "FSC-A", y = "FSC-H") + geom_gate(singlets) + facet_wrap("name", ncol = 4)
+
+autoplot(Subset(data[c(1:4, 41:44)], !nonDebris & singlets), x = "FL1-A") + facet_wrap("name", ncol = 4) 
+```
+
+This looks very consistent across the course of this experiment!
+
+Let's get some stats to see just how consistent this gate is.
+
+```{r}
+invisible(capture.output(
+  d <- summary(filter(data, yeast & singlets))))
+(e <- toTable(d))
+ggplot(data = e, mapping = aes(x = sample, y = percent)) + geom_point()
+```
+
+This looks quite good. As we might expect as the growth enters exponential phase as time progresses (and well numbers get higher) more of our population is captured in the yeast and singlet gates. Based on the periodicity of this it also looks like there is some dependence on the strain. Let's go ahead and apply these gates to the data.
+
+```{r}
+data <- Subset(data, yeast & singlets)
+```
+
+Now we can save these as a gateSet. Within the current version of flowTime these gates are just saved as separate objects within a single `.Rdata` file using the saveGates function. The gates we can define within this function are `yeastGate` defining the population of yeast cells from junk, `dipsingletGate` defining the singlets of your diploid yeast strain, `dipdoubletGate` defining the population of diploid doublet cells, and similarly `hapsingletGate` and `hapdoubletGate` for haploid cells.
+
+This example data set is of a diploid strain, so we will only create these gates.
+```{r}
+saveGates(yeastGate = yeast, dipsingletGate = singlets, fileName = "PSB_Accuri_W303.RData", path = "~/Desktop")
+loadGates(gatesFile = "PSB_Accuri_W303.RData", path = "~/Desktop")
+data_sum <- summarizeFlow(data, channel = c("FL1.A", "FL4.A"), ploidy = "diploid", only = "singlets")
+```
+
+
+
+
