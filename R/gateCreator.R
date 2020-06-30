@@ -18,17 +18,15 @@
 #' @export
 #'
 #' @examples
-#' loadGates("SORPGates")
+#' loadGates(system.file("extdata/SORPGates.RData", package = "flowTime"))
 #' saveGates()
-saveGates <- function(yeastGate = 'yeastGate',
-                      dipsingletGate = 'dipsingletGate',
-                      dipdoubletGate = 'dipdoubletGate',
-                      hapsingletGate = 'hapsingletGate',
-                      hapdoubletGate = 'hapdoubletGate',
+saveGates <- function(yeastGate = NULL,
+                      dipsingletGate = NULL,
+                      dipdoubletGate = NULL,
+                      hapsingletGate = NULL,
+                      hapdoubletGate = NULL,
                       path = getwd(),
                       fileName = "defaultGates.RData") {
-  if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-               "dipsingletGate", "dipdoubletGate"))) loadGates()
     save(yeastGate, dipsingletGate, dipdoubletGate, hapsingletGate,
         hapdoubletGate, file = paste(path, fileName, sep = "/"))
 }
@@ -110,3 +108,4 @@ loadGates <- function(gatesFile = NULL, path = NULL, envir = environment()) {
   else
     load(file = paste(path, gatesFile, sep = "/"), envir = globalenv())
 }
+
