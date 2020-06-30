@@ -116,7 +116,7 @@ toTable(f)
 ```
 So this conservative gating strategy gets rid of many large particles in the earlier timepoints/frames. 
 
-Now we can make a gating template to begin storing all of this gating information in.
+Now we can make a gating template to begin storing all of this gating information in. **Need to finish adding this in**
 ```{r, gating-template}
 gtFile <- system.file("extdata/gating_template/tcell.csv", package = "openCyto")
 library(data.table)
