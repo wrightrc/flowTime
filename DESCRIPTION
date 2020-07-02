@@ -36,7 +36,7 @@ LazyData: true
 biocViews: FlowCytometry, TimeCourse, Visualization, DataImport,
         CellBasedAssays, ImmunoOncology
 Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, 
-        stats
+        stats, flowClust, openCyto, flowStats, ggcyto
 Imports: utils, dplyr, tibble, magrittr, plyr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0

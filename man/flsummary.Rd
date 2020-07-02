@@ -4,7 +4,7 @@
 \alias{flsummary}
 \title{Get summary statistics for fluorescence or other data channels of a flowSet}
 \usage{
-flsummary(flowset, channel = NA)
+flsummary(flowset, channel)
 }
 \arguments{
 \item{flowset}{the \code{flowSet} to create summary statistics for}
@@ -23,5 +23,5 @@ Get summary statistics for fluorescence or other data channels of a flowSet
 \examples{
 plate1 <- read.flowSet(path = system.file("extdata",
 "ss_example", package = "flowTime"), alter.names = TRUE)
-flsummary(plate1)
+flsummary(flowset = plate1, channel = "FL1.A")
 }

@@ -23,66 +23,112 @@
 steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
   ### Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)
-
   ### Pulling out data for specific channel to be used
   #channel <- flowSet[,'FL2.A',drop=FALSE]
-
-  ### Gate the samples
   if (gated == FALSE) {
-    if (!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-                  "dipsingletGate", "dipdoubletGate")))
-      loadGates()
-    yeastGate <- get("yeastGate")
-    hapsingletGate <- get("hapsingletGate")
-    hapdoubletGate <- get("hapdoubletGate")
-    dipsingletGate <- get("dipsingletGate")
-    dipdoubletGate <- get("dipdoubletGate")
     if (ploidy == "haploid") {
-      print("Gating with haploid gates...")
-      yeast <- Subset(flowset, yeastGate)
-      singlets <- Subset(yeast, hapsingletGate)
-      doublets <- Subset(yeast, hapdoubletGate)
-    } else if (ploidy == "diploid") {
-      print("Gating with diploid gates...")
-      yeast <- Subset(flowset, yeastGate)
-      singlets <- Subset(yeast, dipsingletGate)
-      doublets <- Subset(yeast, dipdoubletGate)
-    } else {
-      message("No ploidy defined, only yeast gate will be applied")
-      yeast <- Subset(flowset, yeastGate)
+      if (only == FALSE | only == "yeast") {
+        if (exists("yeastGate")){
+          print("Gating with haploid yeast gate...")
+          subset <- Subset(flowset, yeastGate)
+        }
+        else {
+          print("`yeastGate` object not found in environment. Load a
+                   gateSet with loadGates, create a `yeastGate` filter object,
+                   or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else if(only == "singlets"){
+        if (exists("yeastGate") & exists("hapsingletGate")){
+          print("Gating with haploid singlet gates...")
+          subset <- Subset(flowset, yeastGate & hapsingletGate)
+        }
+        else {
+          print("`yeastGate`  or `hapsingletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else if(only == "doublets"){
+        if (exists("yeastGate") & exists("hapdoubletGate")){
+          print("Gating with haploid doublet gates...")
+          subset <- Subset(flowset, hapdoubletGate)
+        }
+        else {
+          print("`yeastGate` or `hapdoubletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else {
+        print("`only` value not identified. No further gating applied.")
+        subset <- flowset
+      }
     }
-    ### Convert flowSet to dataframe containing all events for each subset
-    if (only == "singlets") {
-      print("Converting singlets events...")
-      singletsdF <- plyr::ddply(pData(singlets), colnames(pData(singlets))[-1],
-                                function(tube) {
-                                  fsApply(x = singlets[tube$name], rbind, use.exprs = TRUE)
-                                })
-      return(singletsdF)
-    } else if (only == "doublets") {
-      print("Converting doublets events...")
-      doubletsdF <- plyr::ddply(pData(doublets), colnames(pData(doublets))[-1],
-                                function(tube) {
-                                  fsApply(x = doublets[tube$name], rbind, use.exprs = TRUE)
-                                })
-      return(doubletsdF)
-    } else if (only == "yeast") {
-      print("Converting all yeast events...")
-      yeastdF <- plyr::ddply(pData(yeast), colnames(pData(yeast))[-1],
+    else if (ploidy == "diploid") {
+      if (only == FALSE | only == "yeast") {
+        if (exists("yeastGate")){
+          print("Gating with diploid yeast gate...")
+          subset <- Subset(flowset, yeastGate)
+        }
+        else {
+          print("`yeastGate` object not found in environment. Load a
+                   gateSet with loadGates, create a `yeastGate` filter object,
+                   or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else if(only == "singlets"){
+        if (exists("yeastGate") & exists("dipsingletGate")){
+          print("Gating with diploid singlet gates...")
+          subset <- Subset(flowset, yeastGate & dipsingletGate)
+        }
+        else {
+          print("`yeastGate`  or `dipsingletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else if(only == "doublets"){
+        if (exists("yeastGate") & exists("dipdoubletGate")){
+          print("Gating with diploid doublet gates...")
+          subset <- Subset(flowset, dipdoubletGate)
+        }
+        else {
+          print("`yeastGate` or `dipdoubletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else {
+        print("`only` value not identified. No further gating applied.")
+        subset <- flowset
+      }
+    }
+    else {
+      print("No ploidy specified. No further gating applied.")
+      subset <- flowset
+    }
+  }
+  else{
+    warning("Unidentified `gated` value. No further gating applied.")
+    subset <- flowset
+  }
+  print("Converting events...")
+    dF <- plyr::ddply(pData(subset), colnames(pData(subset))[-1],
                              function(tube) {
-                               fsApply(x = yeast[tube$name], rbind, use.exprs = TRUE)
+                               fsApply(x = subset[tube$name], rbind, use.exprs = TRUE)
                              })
-      return(yeastdF)
-    }
-  }
-  else {
-    print("Converting all events...")
-    yeastdF <- plyr::ddply(pData(flowset), colnames(pData(flowset))[-1],
-                           function(tube) {
-                             fsApply(x = flowset[tube$name], rbind, use.exprs = TRUE)
-                           })
-    return(yeastdF)
-  }
+  return(dF)
 }
 
 #' Generate a tidy dataset from time-course flow cytometry data
@@ -101,7 +147,8 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #' @export
 #' @examples
 #' example
-#' plate1<-read.flowSet(path=system.file("extdata", "tc_example", package = "flowTime"), alter.names = TRUE)
+#' plate1<-read.flowSet(path=system.file("extdata", "tc_example",
+#' package = "flowTime"), alter.names = TRUE)
 #' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 #' plate1 <- annotateFlowSet(plate1, annotation)
 #' tidy_dat <- tidyFlow(plate1, gated = TRUE)

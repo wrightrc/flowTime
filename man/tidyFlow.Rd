@@ -29,7 +29,8 @@ that
 }
 \examples{
 example
-plate1<-read.flowSet(path=system.file("extdata", "tc_example", package = "flowTime"), alter.names = TRUE)
+plate1<-read.flowSet(path=system.file("extdata", "tc_example",
+package = "flowTime"), alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
 plate1 <- annotateFlowSet(plate1, annotation)
 tidy_dat <- tidyFlow(plate1, gated = TRUE)

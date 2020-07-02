@@ -5,11 +5,11 @@
 \title{Save a yeast gate set}
 \usage{
 saveGates(
-  yeastGate = "yeastGate",
-  dipsingletGate = "dipsingletGate",
-  dipdoubletGate = "dipdoubletGate",
-  hapsingletGate = "hapsingletGate",
-  hapdoubletGate = "hapdoubletGate",
+  yeastGate = NULL,
+  dipsingletGate = NULL,
+  dipdoubletGate = NULL,
+  hapsingletGate = NULL,
+  hapdoubletGate = NULL,
   path = getwd(),
   fileName = "defaultGates.RData"
 )
@@ -42,6 +42,6 @@ the specified gates
 Save a yeast gate set
 }
 \examples{
-loadGates("SORPGates")
+loadGates(system.file("extdata/SORPGates.RData", package = "flowTime"))
 saveGates()
 }

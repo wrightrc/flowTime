@@ -15,8 +15,8 @@
 #' @examples
 #' plate1 <- read.flowSet(path = system.file("extdata",
 #' "ss_example", package = "flowTime"), alter.names = TRUE)
-#' flsummary(plate1)
-flsummary <- function(flowset, channel = NA) {
+#' flsummary(flowset = plate1, channel = "FL1.A")
+flsummary <- function(flowset, channel) {
   # Number of cells (experiments) in the flowSet
   n_experiment <- length(flowset)
 
@@ -45,7 +45,7 @@ flsummary <- function(flowset, channel = NA) {
   }
 
   fl <- fsApply(flowset, meanMedianSD)
-  if(!is.na(channel)) {fl <- fl %>% as_tibble() %>%
+  if(!is.null(channel)) {fl <- fl %>% as_tibble() %>%
     dplyr::select(dplyr::contains(c("name", channel)))}
 
   name <- fsApply(flowset, function(x) keyword(x)$GUID)
@@ -59,10 +59,8 @@ flsummary <- function(flowset, channel = NA) {
 
   # Put it all together
   flsummary <- as.data.frame(cbind(name, time, btime, atime, events, conc, fl))
-  print(class(flsummary))
   # Make rows filename keys
   rownames(flsummary) <- name
-  print(class(pData(flowset)))
   flsummary <- dplyr::full_join(flsummary, pData(flowset), by = "name")
   return(flsummary)
 }
@@ -97,87 +95,118 @@ flsummary <- function(flowset, channel = NA) {
 #'
 summarizeFlow <- function(flowset, channel = NA, gated = FALSE,
                           ploidy = FALSE, only = FALSE) {
-## TODO rewrite logic flow here so that ploidy and only are used to load gates and subset
-  if(!exists(c("yeastGate", "hapsingletGate", "hapdoubletGate",
-               "dipsingletGate", "dipdoubletGate"))) loadGates()
-  yeastGate <- get("yeastGate")
-  hapsingletGate <- get("hapsingletGate")
-  hapdoubletGate <- get("hapdoubletGate")
-  dipsingletGate <- get("dipsingletGate")
-  dipdoubletGate <- get("dipdoubletGate")
-
+  ## TODO rewrite logic flow here so that ploidy and only are used to load gates and subset
   # Number of experiments
   n_experiments <- length(flowset)
-
 
   # Gate the samples
   if (gated == TRUE) {
     print("Summarizing all events...")
-    flowsum <- flsummary(flowset, channel = channel)
-    return(flowsum)
+    sum <- flsummary(flowset, channel = channel)
   }
-
-
-
   else {
-
     if (ploidy == "haploid") {
-      print("Gating with haploid gates...")
-
-      singlets <- Subset(yeast, hapsingletGate)
-      doublets <- Subset(yeast, hapdoubletGate)
-    } else if (ploidy == "diploid") {
-      print("Gating with diploid gates...")
-      yeast <- Subset(flowset, yeastGate)
-      singlets <- Subset(yeast, dipsingletGate)
-      doublets <- Subset(yeast, dipdoubletGate)
-    } else {
-      stop("Error: You must define ploidy=\"haploid\" or ploidy=\"diploid\"")
-    }
-
-
-
-    if (only == FALSE) {
-      # Normalize and summarize each subset
-      if (exists("yeastGate")){
-        print("Gating with yeast gates...")
-        yeast <- Subset(flowset, yeastGate)
-        print("Summarizing all yeast events...")
-        yeastsum <- flsummary(yeast, channel = channel)
+      if (only == FALSE | only == "yeast") {
+        if (exists("yeastGate")){
+          print("Gating with haploid yeast gate...")
+          subset <- Subset(flowset, yeastGate)
+          print("Summarizing all yeast events...")
+          sum <- flsummary(subset, channel = channel)
+        }
+        else {
+          print("`yeastGate` object not found in environment. Load a
+                   gateSet with loadGates, create a `yeastGate` filter object,
+                   or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
       }
-
-
-      print("Summarizing doublets events...")
-      doubletsum <- flsummary(doublets, channel = channel)
-
-      print("Summarizing singlets events...")
-      singletsum <- flsummary(singlets, channel = channel)
-    }
-    else {
-      if (only == "singlets") {
-        print("Summarizing singlets events...")
-        singletsum <- flsummary(singlets, channel = channel)
-        return(singletsum)
+      else if(only == "singlets"){
+        if (exists("yeastGate") & exists("hapsingletGate")){
+          print("Gating with haploid singlet gates...")
+          subset <- Subset(flowset, yeastGate & hapsingletGate)
+          sum <- flsummary(subset, channel = channel)
+        }
+        else {
+          print("`yeastGate`  or `hapsingletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
       }
-      else if (only == "doublets") {
-        print("Summarizing doublets events...")
-        doubletsum <- flsummary(doublets, channel = channel)
-        return(doubletsum)
-      }
-      else if (only == "yeast") {
-        print("Summarizing all yeast events...")
-        yeastsum <- flsummary(yeast, channel = channel)
-        return(yeastsum)
+      else if(only == "doublets"){
+        if (exists("yeastGate") & exists("hapdoubletGate")){
+          print("Gating with haploid doublet gates...")
+          subset <- Subset(flowset, hapdoubletGate)
+          sum <- flsummary(subset, channel = channel)
+        }
+        else {
+          print("`yeastGate` or `hapdoubletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
       }
       else {
         print("'only' must be 'singlets','doublets', or 'yeast'")
         stop()
       }
     }
+    else if (ploidy == "diploid") {
+      if (only == FALSE | only == "yeast") {
+        if (exists("yeastGate")){
+          print("Gating with diploid yeast gate...")
+          subset <- Subset(flowset, yeastGate)
+          print("Summarizing all yeast events...")
+          sum <- flsummary(subset, channel = channel)
+        }
+        else {
+          print("`yeastGate` object not found in environment. Load a
+                   gateSet with loadGates, create a `yeastGate` filter object,
+                   or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else if(only == "singlets"){
+        if (exists("yeastGate") & exists("dipsingletGate")){
+          print("Gating with diploid singlet gates...")
+          subset <- Subset(flowset, yeastGate & dipsingletGate)
+          sum <- flsummary(subset, channel = channel)
+        }
+        else {
+          print("`yeastGate`  or `dipsingletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+          stop()
+        }
+      }
+      else if(only == "doublets"){
+        if (exists("yeastGate") & exists("dipdoubletGate")){
+          print("Gating with diploid doublet gates...")
+          subset <- Subset(flowset, dipdoubletGate)
+          sum <- flsummary(subset, channel = channel)
+        }
+        else {
+        print("`yeastGate` or `dipdoubletGate` object not found in
+                  environment. Load a
+                  gateSet with loadGates, create a `yeastGate` filter object,
+                  or set `gated = FALSE` in your call to `summarizeFlow`")
+        stop()
+        }
+      }
+      else {
+        print("'only' must be 'singlets','doublets', or 'yeast'")
+        stop()
+      }
+    }
+    else {
+      print("No ploidy specified. Summarizing all events.")
+      sum <- flsummary(flowset, channel = channel)
+    }
   }
-  summary_list <- list(yeast = yeastsum, singlets = singletsum,
-                       doublets = doubletsum)
-  return(summary_list)
+  return(sum)
 }
 
 #' Normalize fluorescence
