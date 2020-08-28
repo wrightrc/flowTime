@@ -19,19 +19,21 @@ ploidy of you strains}
 }
 \value{
 a data frame containing all of the selected subset of events from
-the original flowSet for all parameters including experiment time, etime
+the original flowSet for all parameters including experiment time, etime,
+the time after the initial reading at which each event was collected.
 }
 \description{
 Generates a tibble containing all parameters and phenoData
 from a flowSet which can be used to visualize and
-analyze steady state flow cytometry data. Steady state in this case means
-that
+analyze timecourse flow cytometry data.
 }
 \examples{
 plate1<-read.flowSet(path=system.file("extdata", "tc_example",
 package = "flowTime"), alter.names = TRUE)
-annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
+annotation <- read.csv(system.file("extdata", "tc_example.csv",
+package = "flowTime"))
 plate1 <- annotateFlowSet(plate1, annotation)
 tidy_dat <- tidyFlow(plate1, gated = TRUE)
 head(tidy_dat)
+
 }

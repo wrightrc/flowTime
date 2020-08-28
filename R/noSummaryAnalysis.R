@@ -119,6 +119,10 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
       subset <- flowset
     }
   }
+  else if(gated == TRUE) {
+    print("No further gating applied.")
+    subset <- flowset
+  }
   else{
     warning("Unidentified `gated` value. No further gating applied.")
     subset <- flowset
@@ -134,8 +138,7 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #' Generate a tidy dataset from time-course flow cytometry data
 #' @description Generates a tibble containing all parameters and phenoData
 #' from a flowSet which can be used to visualize and
-#' analyze steady state flow cytometry data. Steady state in this case means
-#' that
+#' analyze timecourse flow cytometry data.
 #' @param flowset your flowSet to be analyzed
 #' @param ploidy \code{character} gate to subset your flowset based on the
 #' ploidy of you strains
@@ -143,15 +146,18 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #' 'yeast', singlets', or 'doublets'?
 #' @param gated \code{boolean} is the data already gated?
 #' @return a data frame containing all of the selected subset of events from
-#' the original flowSet for all parameters including experiment time, etime
+#' the original flowSet for all parameters including experiment time, etime,
+#' the time after the initial reading at which each event was collected.
 #' @export
 #' @examples
 #' plate1<-read.flowSet(path=system.file("extdata", "tc_example",
 #' package = "flowTime"), alter.names = TRUE)
-#' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))
+#' annotation <- read.csv(system.file("extdata", "tc_example.csv",
+#' package = "flowTime"))
 #' plate1 <- annotateFlowSet(plate1, annotation)
 #' tidy_dat <- tidyFlow(plate1, gated = TRUE)
 #' head(tidy_dat)
+#'
 tidyFlow <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
   tidy_dat <- steadyState(flowset, gated, ploidy, only)
   tidy_dat <- dplyr::rename(tidy_dat, name = X)
