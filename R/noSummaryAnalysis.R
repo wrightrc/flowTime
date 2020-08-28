@@ -128,7 +128,7 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
     subset <- flowset
   }
   print("Converting events...")
-    dF <- plyr::ddply(pData(subset), colnames(pData(subset))[-1],
+    dF <- plyr::ddply(pData(subset), colnames(pData(subset)),
                              function(tube) {
                                fsApply(x = subset[tube$name], rbind, use.exprs = TRUE)
                              })
@@ -160,7 +160,6 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #'
 tidyFlow <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
   tidy_dat <- steadyState(flowset, gated, ploidy, only)
-  tidy_dat <- dplyr::rename(tidy_dat, name = X)
 
   #Generate time columns
   time <- fsApply(flowset, function(frame) {
@@ -168,7 +167,7 @@ tidyFlow <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
     btime <- btime[1] * 60 + btime[2] + btime[3]/60 + btime[4]/6000
     atime <- as.numeric(keyword(frame)$`#ACQUISITIONTIMEMILLI`)/1000/60
     tstep <- as.numeric(keyword(frame)$`$TIMESTEP`)
-    name <- gsub(pattern = ".fcs", replacement = "", keyword(frame)$GUID)
+    name <- keyword(frame)$GUID
     vol <- as.numeric(keyword(frame)$`$VOL`)/1000
     events <- as.numeric(keyword(frame)$`$TOT`)
     return(c(name = name, btime = btime, atime = atime, tstep = tstep,
