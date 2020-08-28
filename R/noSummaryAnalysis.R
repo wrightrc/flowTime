@@ -146,7 +146,6 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #' the original flowSet for all parameters including experiment time, etime
 #' @export
 #' @examples
-#' example
 #' plate1<-read.flowSet(path=system.file("extdata", "tc_example",
 #' package = "flowTime"), alter.names = TRUE)
 #' annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))

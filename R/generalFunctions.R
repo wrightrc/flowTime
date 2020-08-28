@@ -39,7 +39,7 @@ createAnnotation <- function(yourFlowSet) {
 #'
 annotateFlowSet <- function(yourFlowSet, annotation_df, mergeBy = "name") {
   pData(yourFlowSet)$name <- sampleNames(yourFlowSet)
-  mdata <- plyr::join(pData(yourFlowSet), annotation_df, by = mergeBy)
+  mdata <- dplyr::left_join(pData(yourFlowSet), annotation_df, by = mergeBy)
   rownames(mdata) <- as.character(mdata[, mergeBy])
   pData(yourFlowSet) <- mdata
   yourFlowSet

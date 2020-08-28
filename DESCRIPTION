@@ -39,4 +39,4 @@ Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics,
         stats, flowClust, openCyto, flowStats, ggcyto
 Imports: utils, dplyr, tibble, magrittr, plyr
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

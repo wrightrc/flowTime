@@ -28,7 +28,6 @@ analyze steady state flow cytometry data. Steady state in this case means
 that
 }
 \examples{
-example
 plate1<-read.flowSet(path=system.file("extdata", "tc_example",
 package = "flowTime"), alter.names = TRUE)
 annotation <- read.csv(system.file("extdata", "tc_example.csv", package = "flowTime"))

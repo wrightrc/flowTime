@@ -13,6 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", tidy = TRUE)
 library(flowCore)
 library(flowTime)
 library(ggplot2)
+library(dplyr)
 ```
 
 This vignette walks through visualization and creation of gate sets and schemes used to measure the dynamic responses of yeast synthetic signaling pathways by flow cytometry. 
@@ -145,13 +146,14 @@ autoplot(Subset(data[c(1:4, 41:44)], yeast & singlets), x = "FL1-A") +
 
 This looks very consistent across the course of this experiment!
 
-Let's get some stats to see just how consistent this gate is.
+Let's get some stats to see just how consistent this gate is. Since the samples were collected in alphanumeric order according to the sample name we can also plot the percent of events in our gates vs time/sample, to look for any trends. 
 
 ```{r}
 invisible(capture.output(
   d <- summary(filter(data, yeast & singlets))))
 (e <- toTable(d))
-ggplot(data = e, mapping = aes(x = sample, y = percent)) + geom_point()
+e <- left_join(e, pData(data), by = c("sample" = "name"))
+ggplot(data = e, mapping = aes(x = sample, y = percent, color = strain)) + geom_point()
 ```
 
 This looks quite good. As we might expect as the growth enters exponential phase as time progresses (and well numbers get higher) more of our population is captured in the yeast and singlet gates. Based on the periodicity of this it also looks like there is some dependence on the strain. Now we can either go ahead and apply these gates to the data, and summarize the data with `summarizeFlow` setting the `gated` argument to `TRUE`.
