@@ -167,8 +167,8 @@ Or we can save these as a gateSet and use the `ploidy` and `only` arguments to s
 
 This example data set was collected using a diploid strain, so we will only create these gates.
 ```{r}
-saveGates(yeastGate = yeast, dipsingletGate = singlets, fileName = "PSB_Accuri_W303.RData", path = "~/Desktop")
-loadGates(gatesFile = "PSB_Accuri_W303.RData", path = "~/Desktop")
+saveGates(yeastGate = yeast, dipsingletGate = singlets, fileName = "PSB_Accuri_W303.RData")
+loadGates(gatesFile = "PSB_Accuri_W303.RData")
 data_sum <- summarizeFlow(data, channel = c("FL1.A", "FL4.A"), ploidy = "diploid", only = "singlets")
 ```
 
