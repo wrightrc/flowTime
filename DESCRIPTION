@@ -37,6 +37,6 @@ biocViews: FlowCytometry, TimeCourse, Visualization, DataImport,
         CellBasedAssays, ImmunoOncology
 Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, 
         stats, flowClust, openCyto, flowStats, ggcyto
-Imports: utils, dplyr, tibble, magrittr, plyr
+Imports: utils, dplyr, tibble, magrittr, plyr, rlang
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1

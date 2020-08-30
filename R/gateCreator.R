@@ -19,7 +19,8 @@
 #'
 #' @examples
 #' loadGates(system.file("extdata/SORPGates.RData", package = "flowTime"))
-#' saveGates()
+#' #not run:
+#' #saveGates()
 saveGates <- function(yeastGate = NULL,
                       dipsingletGate = NULL,
                       dipdoubletGate = NULL,

@@ -148,6 +148,7 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #' @return a data frame containing all of the selected subset of events from
 #' the original flowSet for all parameters including experiment time, etime,
 #' the time after the initial reading at which each event was collected.
+#' @importFrom rlang .data
 #' @export
 #' @examples
 #' plate1<-read.flowSet(path=system.file("extdata", "tc_example",
@@ -182,7 +183,7 @@ tidyFlow <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
   #Join time with tidy_dat
   tidy_dat <- dplyr::left_join(tidy_dat, time)
   #Calculate experiment time
-  tidy_dat <- tidy_dat %>% dplyr::mutate(etime = btime - min(btime) + Time*tstep/60)
+  tidy_dat <- tidy_dat %>% dplyr::mutate(etime = .data$btime - min(.data$btime) + .data$Time*.data$tstep/60)
   tidy_dat
 }
 

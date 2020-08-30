@@ -1,4 +1,5 @@
-
+utils::globalVariables(c("yeastGate", "dipsingletGate", "dipdoubletGate",
+                         "hapsingletGate", "hapdoubletGate"))
 
 #' A gate for the set of all yeast cells
 #'
