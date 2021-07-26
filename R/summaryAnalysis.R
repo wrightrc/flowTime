@@ -35,8 +35,12 @@ flsummary <- function(flowset, channel) {
     as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000)
 
   events <- fsApply(flowset, function(x) length(x[, 1]), use.exprs = TRUE)
-  uL <- fsApply(flowset, function(x) as.integer(keyword(x)$`$VOL`)/1000)
-  conc <- events/uL
+  if (!is.null(keyword(flowset[[1]])$`$VOL`)) {
+    uL <- fsApply(flowset, function(x) as.integer(keyword(x)$`$VOL`)/1000)
+    conc <- events/uL
+  } else
+    conc <- rep(NA, length(flowset))
+
 
   for (i in 1:n_experiment) {
     if (events[i] < 100) {
@@ -44,8 +48,8 @@ flsummary <- function(flowset, channel) {
     }
   }
 
-  fl <- fsApply(flowset, meanMedianSD)
-  if(!is.null(channel)) {fl <- fl %>% as_tibble() %>%
+  fl <- fsApply(flowset, meanMedianSD) %>% as_tibble(rownames = "name")
+  if (!is.na(channel)) {fl <- fl %>%
     dplyr::select(dplyr::contains(c("name", channel)))}
 
   name <- fsApply(flowset, function(x) keyword(x)$GUID)
@@ -58,10 +62,11 @@ flsummary <- function(flowset, channel) {
   }
 
   # Put it all together
-  flsummary <- as.data.frame(cbind(name, time, btime, atime, events, conc, fl))
+  flsummary <- dplyr::bind_cols(name, time = time, btime = btime, atime = atime, events = events, conc = conc)
+  flsummary <- dplyr::left_join(flsummary, pData(flowset), by = "name")
   # Make rows filename keys
-  rownames(flsummary) <- name
-  flsummary <- dplyr::full_join(flsummary, pData(flowset), by = "name")
+  #rownames(flsummary) <- name
+  flsummary <- dplyr::left_join(flsummary, fl, by = "name")
   return(flsummary)
 }
 
