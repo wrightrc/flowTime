@@ -1,4 +1,8 @@
-# flowTime 1.3
+# flowTime 1.15.1
+
+- bugfix in `summarizeFlow` which was causing numeric columns to be converted to characters
+
+# flowTime 1.15
 
 - `summarizeFlow` now summarizes all data channels by default
     - now implements the dplyr-based `meanMedianSD` function
