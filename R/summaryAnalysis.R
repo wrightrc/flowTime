@@ -324,21 +324,23 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 
 
 #' Add background subtraction to a summary data frame
-#' @description Subtracts the background fluorescence of a given control
-#' strain from the chosen column.
+#' @description Makes a new column from `column` with the background value of
+#' a given `baseline` control from a chosen identifier column
+#' `baseline_column` subtracted from the values of `column`.
 #'
-#' @param flowData the summary data frame of flowSet to be background
-#' subtracted
-#' @param column the column containing the fluorescent measurement to be
-#' background subtracted
-#' @param baseline_column the column containing the name of the strain
-#' representing background fluorescent values
-#' @param baseline \code{character} the name of the strain representing
+#' @param data the summary data frame of a flowSet (from `summarizeFlow` or
+#' `flsummary`) to be used in calculating the background subtracted column
+#' @param column the column containing the fluorescent (or other)
+#' measurement to be background subtracted
+#' @param baseline_column the column containing the identifier of the
+#' rows containing background values
+#' @param baseline \code{character} the identified or name of representing
 #' background fluorescent values
 #'
-#' @return A summary data frame with an additional column "column_bs"
-#' containing the background subtracted fluorescent values
+#' @return A summary data frame with an additional column `column_bs`
+#' containing the background subtracted values
 #' @export
+#' @importFrom rlang :=
 #'
 #' @examples
 #' dat<-read.flowSet(path=system.file("extdata", "tc_example",
@@ -347,13 +349,15 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 #' package = "flowTime"))
 #' annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
 #' adat <- annotateFlowSet(dat, annotation)
-#' loadGates(gatesFile = 'C6Gates')
-#' dat_sum <- summarizeFlow(adat, ploidy = 'diploid', only = 'singlets',
+#' dat_sum <- summarizeFlow(adat, gated = TRUE,
 #' channel = 'FL1.A')
-#' dat_sum <- addbs(dat_sum, column = "FL1.Amean", baseline = "background")
+#' dat_sum <- addbs(data = dat_sum, column = FL1.Amean,
+#' baseline_column = strain,
+#' baseline = "background")
 #'
-addbs <- function(flowData, column = "FL3.Amean", baseline_column = "strain", baseline = "noYFP") {
-  flowData[, paste(column, "_bs", sep = "")] <- flowData[, column] -
-    mean(subset(flowData, baseline_column == baseline)[,column])
-  return(flowData)
+addbs <- function(data, column, baseline_column,
+                  baseline = "noYFP") {
+  data %>%
+    dplyr::mutate("{{column}}_bs" := {{column}} -
+             mean({{column}}[{{baseline_column}} == baseline]))
 }

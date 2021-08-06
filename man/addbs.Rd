@@ -4,33 +4,29 @@
 \alias{addbs}
 \title{Add background subtraction to a summary data frame}
 \usage{
-addbs(
-  flowData,
-  column = "FL3.Amean",
-  baseline_column = "strain",
-  baseline = "noYFP"
-)
+addbs(data, column, baseline_column, baseline = "noYFP")
 }
 \arguments{
-\item{flowData}{the summary data frame of flowSet to be background
-subtracted}
+\item{data}{the summary data frame of a flowSet (from `summarizeFlow` or
+`flsummary`) to be used in calculating the background subtracted column}
 
-\item{column}{the column containing the fluorescent measurement to be
-background subtracted}
+\item{column}{the column containing the fluorescent (or other)
+measurement to be background subtracted}
 
-\item{baseline_column}{the column containing the name of the strain
-representing background fluorescent values}
+\item{baseline_column}{the column containing the identifier of the
+rows containing background values}
 
-\item{baseline}{\code{character} the name of the strain representing
+\item{baseline}{\code{character} the identified or name of representing
 background fluorescent values}
 }
 \value{
-A summary data frame with an additional column "column_bs"
-containing the background subtracted fluorescent values
+A summary data frame with an additional column `column_bs`
+containing the background subtracted values
 }
 \description{
-Subtracts the background fluorescence of a given control
-strain from the chosen column.
+Makes a new column from `column` with the background value of
+a given `baseline` control from a chosen identifier column
+`baseline_column` subtracted from the values of `column`.
 }
 \examples{
 dat<-read.flowSet(path=system.file("extdata", "tc_example",
@@ -39,9 +35,10 @@ annotation <- read.csv(system.file("extdata", "tc_example.csv",
 package = "flowTime"))
 annotation[which(annotation$treatment == 0), 'strain'] <- 'background'
 adat <- annotateFlowSet(dat, annotation)
-loadGates(gatesFile = 'C6Gates')
-dat_sum <- summarizeFlow(adat, ploidy = 'diploid', only = 'singlets',
+dat_sum <- summarizeFlow(adat, gated = TRUE,
 channel = 'FL1.A')
-dat_sum <- addbs(dat_sum, column = "FL1.Amean", baseline = "background")
+dat_sum <- addbs(data = dat_sum, column = FL1.Amean,
+baseline_column = strain,
+baseline = "background")
 
 }
