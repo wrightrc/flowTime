@@ -52,7 +52,6 @@ flsummary <- function(flowset, channel) {
   fl <- fsApply(flowset, meanMedianSD) %>% tibble::as_tibble(rownames = "name")
 
   if(!is.na(channel)) {
-    # TODO: add error handling
     fl <- fl  %>%
     dplyr::select(dplyr::contains(c("name", channel)))}
 
@@ -104,7 +103,6 @@ flsummary <- function(flowset, channel) {
 #'
 summarizeFlow <- function(flowset, channel = NA, gated = FALSE,
                           ploidy = FALSE, only = FALSE) {
-  ## TODO rewrite logic flow here so that ploidy and only are used to load gates and subset
   # Number of experiments
   n_experiments <- length(flowset)
 
@@ -324,12 +322,14 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 
 
 #' Add background subtraction to a summary data frame
-#' @description Makes a new column from `column` with the background value of
-#' a given `baseline` control from a chosen identifier column
-#' `baseline_column` subtracted from the values of `column`.
+#' @description Makes a new column from \code{column} with the background value of
+#' a given \code{baseline} control from a chosen identifier column
+#' \code{baseline_column} subtracted from the values of \code{column}.
 #'
-#' @param data the summary data frame of a flowSet (from `summarizeFlow` or
-#' `flsummary`) to be used in calculating the background subtracted column
+#' @param data the summary data frame of a flowSet (from
+#' \code{\link{summarizeFlow}} or
+#' \code{\link{flsummary}}) to be used in calculating the background
+#' subtracted column
 #' @param column the column containing the fluorescent (or other)
 #' measurement to be background subtracted
 #' @param baseline_column the column containing the identifier of the
@@ -337,7 +337,7 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 #' @param baseline \code{character} the identified or name of representing
 #' background fluorescent values
 #'
-#' @return A summary data frame with an additional column `column_bs`
+#' @return A summary data frame with an additional column \code{column_bs}
 #' containing the background subtracted values
 #' @export
 #' @importFrom rlang :=
