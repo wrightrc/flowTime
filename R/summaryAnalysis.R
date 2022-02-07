@@ -26,13 +26,19 @@ flsummary <- function(flowset, channel) {
   # Get time of each frame in minutes of the day
   btime_raw <- fsApply(flowset, function(x)
     as.numeric(unlist(strsplit(keyword(x)$`$BTIM`, split = ":"))))
-  btime <- apply(btime_raw, 1, function(x) x[1] * 60 + x[2] + x[3]/60 +
-                   x[4]/6000)
+  btime <- apply(btime_raw, 1, function(x) {
+    if (length(x) == 4) x[1] * 60 + x[2] + x[3]/60 + x[4]/6000
+    else if (length(x) == 3) x[1] * 60 + x[2] + x[3]/60
+  })
   time <- btime - min(btime)
 
   # Acquisition time - how long it took to take the sample, in seconds
-  atime <- fsApply(flowset, function(x)
-    as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000)
+  atime <- fsApply(flowset, function(x) {
+    if (!is.na(keyword(x)$`#ACQUISITIONTIMEMILLI`))
+        as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000
+    else max(exprs(x)[,"Time"])/60000
+  })
+
 
   events <- fsApply(flowset, function(x) length(x[, 1]), use.exprs = TRUE)
   if (!is.null(keyword(flowset[[1]])$`$VOL`)) {
@@ -357,7 +363,13 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 #'
 addbs <- function(data, column, baseline_column,
                   baseline = "noYFP") {
-  data %>%
-    dplyr::mutate("{{column}}_bs" := {{column}} -
-             mean({{column}}[{{baseline_column}} == baseline]))
+  column_q <- enquo(column)
+  baseline_column_q <- enquo(baseline_column)
+    dplyr::if_else(
+      quo_name(column_q) %in% names(data) &
+        quo_name(baseline_column_q) %in% names(data) &
+        baseline %in% unique(data[, quo_name(baseline_column_q)]),
+      data %>% dplyr::mutate("{{column}}_bs" := {{column}} -
+                     mean({{column}}[{{baseline_column}} == baseline])),
+      message("`column`, `baseline_column`, and/or `baseline` argument values not found in `data`"))
 }

@@ -159,13 +159,14 @@ steadyState <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
 #' tidy_dat <- tidyFlow(plate1, gated = TRUE)
 #' head(tidy_dat)
 #'
-tidyFlow <- function(flowset, gated = FALSE, ploidy = NA, only = NA) {
+tidyFlow <- function(flowset, gated = TRUE, ploidy = NA, only = NA) {
   tidy_dat <- steadyState(flowset, gated, ploidy, only)
 
   #Generate time columns
   time <- fsApply(flowset, function(frame) {
     btime <- as.numeric(unlist(strsplit(keyword(frame)$`$BTIM`, split = ":")))
-    btime <- btime[1] * 60 + btime[2] + btime[3]/60 + btime[4]/6000
+    if (length(btime) == 4) btime <- btime[1] * 60 + btime[2] + btime[3]/60 + btime[4]/6000
+    else if (length(btime) == 3) btime <- btime[1] * 60 + btime[2] + btime[3]/60
     atime <- as.numeric(keyword(frame)$`#ACQUISITIONTIMEMILLI`)/1000/60
     tstep <- as.numeric(keyword(frame)$`$TIMESTEP`)
     name <- keyword(frame)$GUID
