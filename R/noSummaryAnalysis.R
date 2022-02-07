@@ -167,7 +167,9 @@ tidyFlow <- function(flowset, gated = TRUE, ploidy = NA, only = NA) {
     btime <- as.numeric(unlist(strsplit(keyword(frame)$`$BTIM`, split = ":")))
     if (length(btime) == 4) btime <- btime[1] * 60 + btime[2] + btime[3]/60 + btime[4]/6000
     else if (length(btime) == 3) btime <- btime[1] * 60 + btime[2] + btime[3]/60
-    atime <- as.numeric(keyword(frame)$`#ACQUISITIONTIMEMILLI`)/1000/60
+    atime <- if (!is.null(keyword(frame)$`#ACQUISITIONTIMEMILLI`))
+        as.numeric(keyword(frame)$`#ACQUISITIONTIMEMILLI`)/1000
+      else max(exprs(frame)[,"Time"])/60000
     tstep <- as.numeric(keyword(frame)$`$TIMESTEP`)
     name <- keyword(frame)$GUID
     vol <- as.numeric(keyword(frame)$`$VOL`)/1000

@@ -34,7 +34,7 @@ flsummary <- function(flowset, channel) {
 
   # Acquisition time - how long it took to take the sample, in seconds
   atime <- fsApply(flowset, function(x) {
-    if (!is.na(keyword(x)$`#ACQUISITIONTIMEMILLI`))
+    if (!is.null(keyword(x)$`#ACQUISITIONTIMEMILLI`))
         as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000
     else max(exprs(x)[,"Time"])/60000
   })

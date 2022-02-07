@@ -4,7 +4,7 @@
 \alias{tidyFlow}
 \title{Generate a tidy dataset from time-course flow cytometry data}
 \usage{
-tidyFlow(flowset, gated = FALSE, ploidy = NA, only = NA)
+tidyFlow(flowset, gated = TRUE, ploidy = NA, only = NA)
 }
 \arguments{
 \item{flowset}{your flowSet to be analyzed}
