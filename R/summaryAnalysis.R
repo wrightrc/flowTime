@@ -30,6 +30,8 @@ flsummary <- function(flowset, channel) {
     if (length(x) == 4) x[1] * 60 + x[2] + x[3]/60 + x[4]/6000
     else if (length(x) == 3) x[1] * 60 + x[2] + x[3]/60
   })
+  stopifnot(names(btime) == sampleNames(flowset))
+  btime <- unname(btime)
   time <- btime - min(btime)
 
   # Acquisition time - how long it took to take the sample, in seconds
@@ -71,7 +73,7 @@ flsummary <- function(flowset, channel) {
   }
 
   # Put it all together
-  flsummary <- dplyr::bind_cols(name, time = time, btime = btime, atime = atime, events = events, conc = conc)
+  flsummary <- dplyr::bind_cols(name, time = time, btime = btime, atime = unname(atime), events = unname(events), conc = unname(conc))
   flsummary <- dplyr::left_join(flsummary, pData(flowset), by = "name")
   # Make rows filename keys
   #rownames(flsummary) <- name
