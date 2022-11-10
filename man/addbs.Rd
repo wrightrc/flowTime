@@ -7,8 +7,10 @@
 addbs(data, column, baseline_column, baseline = "noYFP")
 }
 \arguments{
-\item{data}{the summary data frame of a flowSet (from `summarizeFlow` or
-`flsummary`) to be used in calculating the background subtracted column}
+\item{data}{the summary data frame of a flowSet (from
+\code{\link{summarizeFlow}} or
+\code{\link{flsummary}}) to be used in calculating the background
+subtracted column}
 
 \item{column}{the column containing the fluorescent (or other)
 measurement to be background subtracted}
@@ -20,13 +22,13 @@ rows containing background values}
 background fluorescent values}
 }
 \value{
-A summary data frame with an additional column `column_bs`
+A summary data frame with an additional column \code{column_bs}
 containing the background subtracted values
 }
 \description{
-Makes a new column from `column` with the background value of
-a given `baseline` control from a chosen identifier column
-`baseline_column` subtracted from the values of `column`.
+Makes a new column from \code{column} with the background value of
+a given \code{baseline} control from a chosen identifier column
+\code{baseline_column} subtracted from the values of \code{column}.
 }
 \examples{
 dat<-read.flowSet(path=system.file("extdata", "tc_example",

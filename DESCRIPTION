@@ -1,7 +1,7 @@
 Package: flowTime
 Title: Annotation and analysis of biological dynamical systems using
         flow cytometry
-Version: 1.22.0
+Version: 1.22.1
 Authors@R: c(person("R. Clay", "Wright", email =
         "wright.clay@gmail.com", role = c("aut", "cre")),
         person("Nick", "Bolten", email = "nbolten@gmail.com", role =
@@ -35,8 +35,8 @@ License: Artistic-2.0
 LazyData: true
 biocViews: FlowCytometry, TimeCourse, Visualization, DataImport,
         CellBasedAssays, ImmunoOncology
-Suggests: knitr, rmarkdown, flowViz, ggplot2, BiocGenerics, 
-        stats, flowClust, openCyto, flowStats, ggcyto
+Suggests: knitr, rmarkdown, ggplot2, BiocGenerics, 
+        stats, flowClust
 Imports: utils, dplyr (>= 1.0.0), tibble, magrittr, plyr, rlang
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
