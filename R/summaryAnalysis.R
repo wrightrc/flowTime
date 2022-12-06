@@ -26,21 +26,26 @@ flsummary <- function(flowset, channel) {
   # Get time of each frame in minutes of the day
   btime_raw <- fsApply(flowset, function(x)
     as.numeric(unlist(strsplit(keyword(x)$`$BTIM`, split = ":"))))
-  btime <- apply(btime_raw, 1, function(x) {
-    if (length(x) == 4) x[1] * 60 + x[2] + x[3]/60 + x[4]/6000
-    else if (length(x) == 3) x[1] * 60 + x[2] + x[3]/60
-  })
+  btime <- if(ncol(btime_raw) == 4) apply(btime_raw, 1, function(x) x[1] * 60 +
+                      x[2] + x[3]/60 + x[4]/6000) else
+           if(ncol(btime_raw) == 3) apply(btime_raw, 1, function(x) x[1] * 60 +
+                      x[2] + x[3]/60) else
+           stop("Invalid BTIM paramater in FCS file")
+
   stopifnot(names(btime) == sampleNames(flowset))
   btime <- unname(btime)
   time <- btime - min(btime)
 
   # Acquisition time - how long it took to take the sample, in seconds
-  atime <- fsApply(flowset, function(x) {
-    if (!is.null(keyword(x)$`#ACQUISITIONTIMEMILLI`))
-        as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000
-    else max(exprs(x)[,"Time"])/60000
-  })
-
+  if (!is.null(keyword(flowset[[1]])$`#ACQUISITIONTIMEMILLI`)) {
+    atime <- fsApply(flowset, function(x) {
+      as.numeric(keyword(x)$`#ACQUISITIONTIMEMILLI`)/1000
+      })
+    } else {
+    atime <- fsApply(flowset, function(x) {
+      max(exprs(x)[,"Time"])/60000
+      })
+    }
 
   events <- fsApply(flowset, function(x) length(x[, 1]), use.exprs = TRUE)
   if (!is.null(keyword(flowset[[1]])$`$VOL`)) {
@@ -73,7 +78,14 @@ flsummary <- function(flowset, channel) {
   }
 
   # Put it all together
+<<<<<<< HEAD
   flsummary <- dplyr::bind_cols(name, time = time, btime = btime, atime = unname(atime), events = unname(events), conc = unname(conc))
+=======
+   if(exists("atime")){
+     flsummary <- dplyr::bind_cols(name, time = time, btime = unname(btime), atime = unname(atime), events = events, conc = conc)
+   } else
+     flsummary <- dplyr::bind_cols(name, time = time, btime = unname(btime), events = events, conc = conc)
+>>>>>>> 254b2fb (handling for 3 and 4 item btime lists and missing ACQUISITIMEMILLI)
   flsummary <- dplyr::left_join(flsummary, pData(flowset), by = "name")
   # Make rows filename keys
   #rownames(flsummary) <- name
