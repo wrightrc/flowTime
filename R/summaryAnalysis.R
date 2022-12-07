@@ -373,13 +373,6 @@ addnorm <- function(frame, factor_in = c("strain", "treatment"),
 #'
 addbs <- function(data, column, baseline_column,
                   baseline = "noYFP") {
-  column_q <- enquo(column)
-  baseline_column_q <- enquo(baseline_column)
-    dplyr::if_else(
-      quo_name(column_q) %in% names(data) &
-        quo_name(baseline_column_q) %in% names(data) &
-        baseline %in% unique(data[, quo_name(baseline_column_q)]),
       data %>% dplyr::mutate("{{column}}_bs" := {{column}} -
-                     mean({{column}}[{{baseline_column}} == baseline])),
-      message("`column`, `baseline_column`, and/or `baseline` argument values not found in `data`"))
+                     mean({{column}}[{{baseline_column}} == baseline]))
 }
