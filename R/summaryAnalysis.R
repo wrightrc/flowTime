@@ -78,14 +78,10 @@ flsummary <- function(flowset, channel) {
   }
 
   # Put it all together
-<<<<<<< HEAD
-  flsummary <- dplyr::bind_cols(name, time = time, btime = btime, atime = unname(atime), events = unname(events), conc = unname(conc))
-=======
    if(exists("atime")){
      flsummary <- dplyr::bind_cols(name, time = time, btime = unname(btime), atime = unname(atime), events = events, conc = conc)
    } else
      flsummary <- dplyr::bind_cols(name, time = time, btime = unname(btime), events = events, conc = conc)
->>>>>>> 254b2fb (handling for 3 and 4 item btime lists and missing ACQUISITIMEMILLI)
   flsummary <- dplyr::left_join(flsummary, pData(flowset), by = "name")
   # Make rows filename keys
   #rownames(flsummary) <- name
